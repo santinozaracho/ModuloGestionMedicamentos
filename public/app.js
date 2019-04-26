@@ -1,13 +1,3 @@
-var metodoSol = "Graphic"; // Variable que almacena el metodo de Solucion
-var tipoOpt = "Maximizacion"; // Variable que almacena el tipo de Optimizacion que se busca
-
-$(function() {
-    $("[data-toggle=popover]").popover({
-        html: true
-    });
-})
-
-
 $(document).ready(function() {
 
 
@@ -26,6 +16,9 @@ $(document).ready(function() {
     });
 
 
+});
 
-
+$.getJSON('https://modulogenstionmedicamentos.firebaseapp.com/firstGet', function(data) {
+    //data is the JSON string
+    console.log(data);
 });
