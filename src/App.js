@@ -65,7 +65,7 @@ class App extends Component {
     return (
       <div className="App">
 
-        <nav className="navbar navbar-dark bg-dark">
+        <nav className="navbar navbar-dark bg-dark fixed-top">
           <a className="navbar-brand" href="/">
             Medicamentos
             <span className="badge badge-pill badge-light ml-2">
@@ -92,7 +92,7 @@ class App extends Component {
           </a>
         </nav>
 
-        <div className="container">
+        <div className="container mt-5">
           <ViewMedics></ViewMedics>
         </div>
       </div>
