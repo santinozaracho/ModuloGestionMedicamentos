@@ -44,9 +44,9 @@ class ViewMedics extends Component {
   }
 
   handleAddMedic(medic) {
-    this.setState({
-      medicamentos: [...this.state.medicamentos, medic]
-    })
+    // this.setState({
+    //   medicamentos: [...this.state.medicamentos, medic]
+    // })
   }
 
   render() {
@@ -85,12 +85,11 @@ class ViewMedics extends Component {
         <div className="container">
           <div className="row mt-4">
 
-            <div className="col-md-4 text-center">
-                <img src={logo} className="App-logo" alt="logo" />
+            <div className="col-md-4 mt-5 text-center">
               <CreateMedic onAddMedic={this.handleAddMedic}></CreateMedic>
             </div>
 
-            <div className="col-md-8">
+            <div className="col-md-8 text-center">
               <div className="row">
                 {medicamentos}
               </div>

@@ -1,0 +1,29 @@
+{
+  "navegacion": [
+    {
+      "nombre": "Inicio",
+      "codigo": "HOME",
+      "app":"Inicio"
+    },
+    {
+      "nombre": "Medicamentos",
+      "codigo": "MEDIC",
+      "app":"ViewMedics"
+    },
+    {
+      "nombre": "Asignaciones",
+      "codigo": "ASIGN",
+      "app":"Inicio"
+    },
+    {
+      "nombre": "Controles",
+      "codigo": "CONTROLES",
+      "app":"Inicio"
+    },
+    {
+      "nombre": "Cargas",
+      "codigo": "CARGAS",
+      "app":"Inicio"
+    }
+  ]
+}

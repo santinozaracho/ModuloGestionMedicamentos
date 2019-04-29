@@ -17,6 +17,10 @@ class CreateMedic extends Component {
         };
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+
+    }
+
+    blankState(yes) {
     }
 
 
@@ -24,13 +28,13 @@ class CreateMedic extends Component {
       e.preventDefault();
       this.ref.add(this.state)
         .then((docRef) => {
+          console.log("saved.");
           this.setState({
             nombre: '',
             cantidad: '',
             codigo: '',
             drogas: '',
-            presentacion: ''
-          });
+            presentacion: ''});
           // this.props.history.push("/");
           })
         .catch((error) => {
@@ -58,7 +62,7 @@ class CreateMedic extends Component {
                 <input type = "text"
                       name = "nombre"
                       className = "form-control"
-                      value = { this.state.title }
+                      value = { this.state.nombre }
                       onChange = { this.handleInputChange }
                       placeholder = "Nombre" />
               </div>
@@ -66,7 +70,7 @@ class CreateMedic extends Component {
                 <input type = "text"
                       name = "codigo"
                       className = "form-control"
-                      value = { this.state.responsible }
+                      value = { this.state.codigo }
                       onChange = { this.handleInputChange }
                       placeholder = "Codigo" />
               </div>
@@ -74,14 +78,14 @@ class CreateMedic extends Component {
                 <input type = "text"
                       name = "drogas"
                       className = "form-control"
-                      value = { this.state.description }
+                      value = { this.state.drogas }
                       onChange = { this.handleInputChange }
                       placeholder = "Drogas" />
               </div>
               <div className = "form-group" >
                 <input name = "presentacion"
                         className = "form-control"
-                        value = { this.state.priority }
+                        value = { this.state.presentacion }
                         onChange = { this.handleInputChange }
                         placeholder= 'Presentacion'/>
               </div>
@@ -89,7 +93,7 @@ class CreateMedic extends Component {
                 <input type = "text"
                       name = "cantidad"
                       className = "form-control"
-                      value = { this.state.description }
+                      value = { this.state.cantidad }
                       onChange = { this.handleInputChange }
                       placeholder = "Cantidad" />
               </div>
