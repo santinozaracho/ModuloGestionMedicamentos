@@ -9,8 +9,7 @@ import Inicio from './components/inicio/Inicio'
 import Navigation from './components/menu/Navigation';
 import ViewMedics from './components/medicamentos/ViewMedics';
 import {navegacion} from './components/menu/navegacion.json'
-
-
+import Container from 'react-bootstrap/Container'
 
 class App extends Component {
   constructor(props) {
@@ -39,9 +38,9 @@ class App extends Component {
     return (
       <div className="App">
         <Navigation onChangeNavigation={this.handleApps}></Navigation>
-        <div className="container mt-5">
+        <Container>
           {this.state.appLoaded}
-        </div>
+        </Container>
       </div>
     );
   }
