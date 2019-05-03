@@ -1,6 +1,4 @@
-import React, { Component } from 'react';
 import firebase from 'firebase/app';
-import firestore from 'firebase/firestore';
 
 
 var config = {
