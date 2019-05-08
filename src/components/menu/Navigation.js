@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import logo from '../../logo.svg';
 import DataBase from '../../DataBase'
 import { navegacion } from './navegacion.json';
-import NavItem from './NavItem'
+import { Button,Navbar,Nav,Form,FormControl } from 'react-bootstrap';
+
 
 
 
@@ -24,34 +25,25 @@ class Navigation extends Component{
   render() {
     const barra = this.state.navegacion.map( (item) => {
       return(
-        <NavItem key={item.codigo}
-                codigo={item.codigo}
-                nombre={item.nombre}
-                cantidad="3"
-                onClick={this.loadApp}
-                isActive={item.codigo == this.state.active ? true: false} />
+        <Nav.Link  active={item.codigo === this.state.active ? true: false} eventKey={item.codigo}>{item.nombre}</Nav.Link>
+      
 
     )});
     return(
-      <nav className="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-        <a className="nav-item" href="#"><img src={logo} className="App-logo" alt="logo" height="50" width="50"/></a>
-        <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span className="navbar-toggler-icon"></span>
-        </button>
-
-        <div className="collapse navbar-collapse" id="navbarSupportedContent">
-
-          <form className="form-inline my-2 my-lg-0">
-            <input className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"/>
-            <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-          </form>
-
-          <ul className="navbar-nav mr-auto">
-            {barra}
-          </ul>
-
-        </div>
-      </nav>
+      <Navbar collapseOnSelect bg="light" variant="light" sticky="top">
+        <Navbar.Brand href=""><img src={logo} className="App-logo" alt="logo" height="50" width="50"/></Navbar.Brand>
+        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+         <Navbar.Collapse id="responsive-navbar-nav">
+          <Form inline>
+            <FormControl type="text" placeholder="Buscar" className="mr-sm-2" />
+            <Button variant="outline-success">Buscar</Button>
+          </Form>
+          <Nav className="mr-auto" activeKey="HOME"
+          onSelect={selectedKey => this.loadApp(selectedKey)}>
+          {barra}
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
     )
   }
 
