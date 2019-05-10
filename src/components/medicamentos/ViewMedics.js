@@ -70,7 +70,7 @@ class ViewMedics extends Component {
               <button
                 className="btn btn-danger"
                 onClick={this.removeMedic.bind(this, medic.key)}>
-                Delete
+                Borrar
               </button>
             </div>
           </div>
