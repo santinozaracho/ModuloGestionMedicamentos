@@ -9,7 +9,7 @@
   "hosting": {
     "public": "build",
     "rewrites":[{
-      "source":"**",
+      "source":"/*",
       "function":"app"
     }],
     "ignore": [

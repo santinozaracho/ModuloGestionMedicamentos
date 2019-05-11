@@ -1,0 +1,32 @@
+[debug] [2019-05-11T14:20:19.920Z] ----------------------------------------------------------------------
+[debug] [2019-05-11T14:20:19.927Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\santy\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js serve --only functions
+[debug] [2019-05-11T14:20:19.928Z] CLI Version:   6.8.0
+[debug] [2019-05-11T14:20:19.928Z] Platform:      win32
+[debug] [2019-05-11T14:20:19.928Z] Node Version:  v11.0.0
+[debug] [2019-05-11T14:20:19.946Z] Time:          Sat May 11 2019 11:20:19 GMT-0300 (GMT-03:00)
+[debug] [2019-05-11T14:20:19.946Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2019-05-11T14:20:19.988Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2019-05-11T14:20:19.991Z] > authorizing via signed-in user
+[debug] [2019-05-11T14:20:19.991Z] [iam] checking project modulogestionmedicamentos for permissions ["firebase.projects.get"]
+[debug] [2019-05-11T14:20:19.997Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2019-05-11T14:20:19.997Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2019-05-11T14:20:20.381Z] <<< HTTP RESPONSE 200
+[debug] [2019-05-11T14:20:20.399Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/modulogestionmedicamentos:testIamPermissions  
+
+[debug] [2019-05-11T14:20:21.815Z] <<< HTTP RESPONSE 200
+[debug] [2019-05-11T14:20:21.818Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/modulogestionmedicamentos  
+ 
+[debug] [2019-05-11T14:20:23.221Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from 'C:\Users\santy\Documents\GitHub\ModuloGestionMedicamentos'...
+[info] 
+[info] i  functions: Preparing to emulate functions.
+[debug] [2019-05-11T14:20:25.875Z] Fetching environment
+[debug] [2019-05-11T14:20:25.883Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/51202560735:getServerAppConfig  
+ 
+[debug] [2019-05-11T14:20:26.675Z] <<< HTTP RESPONSE 200
+[debug] [2019-05-11T14:20:26.676Z] Starting @google-cloud/functions-emulator
+[debug] [2019-05-11T14:20:29.250Z] Parsing function triggers
+[info] +  functions: app: http://localhost:5000/modulogestionmedicamentos/us-central1/app

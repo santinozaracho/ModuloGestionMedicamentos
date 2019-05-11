@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import logo from '../../logo.svg';
-import DataBase from '../../DataBase'
 import { navegacion } from './navegacion.json';
 import { Button,Navbar,Nav,Form,FormControl } from 'react-bootstrap';
 
@@ -25,12 +24,12 @@ class Navigation extends Component{
   render() {
     const barra = this.state.navegacion.map( (item) => {
       return(
-        <Nav.Link  active={item.codigo === this.state.active ? true: false} eventKey={item.codigo}>{item.nombre}</Nav.Link>
+        <Nav.Link key={item.codigo} active={item.codigo === this.state.active ? true: false} eventKey={item.codigo}>{item.nombre}</Nav.Link>
       
 
     )});
     return(
-      <Navbar collapseOnSelect bg="light" variant="light" sticky="top">
+      <Navbar collapseOnSelect expand="lg" bg="light" variant="light" sticky="top">
         <Navbar.Brand href=""><img src={logo} className="App-logo" alt="logo" height="50" width="50"/></Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
          <Navbar.Collapse id="responsive-navbar-nav">

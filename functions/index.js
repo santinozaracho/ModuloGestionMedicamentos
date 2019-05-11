@@ -1,12 +1,11 @@
 
 const functions = require('firebase-functions');
-const firebase = require('firebase-admin');
 const express = require('express');
-// const engines = engine('consolidate');
+const bodyParser = require('body-parser');
 const app = express();
-
-//Obtenemos las rutas de Medicamento
-
+const router = express.Router();
+const cors = require('cors');
+//Conexion a bd
 var admin = require("firebase-admin");
 
 var serviceAccount = require("./serviceAccountKey.json");
@@ -15,20 +14,18 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
 
-// This is the router which will be imported in our
-// middleware that is specific to this router
-// medicRouter.use(function timeLog(req, res, next) {
-//     console.log('Time: ', Date.now());
-//     next();
-//   });
-// api hub (the index.ts which will be sent to Firebase Functions).
 
-var medicamentos =  admin.firestore().collection('medicamentos');
+// Example de usar where y orderby
+// var biggest = citiesRef.where('population', '>', 2500000).orderBy('population').limit(2);
+//Referencias a las tablas..
+var medicamentosRef =  admin.firestore().collection('medicamentos');
+var asignacionesRef =  admin.firestore().collection('asignaciones');
+var medicosRef =  admin.firestore().collection('medicos');
 
-app.get('/api', function (req, res) {
-    console.log("Consutla");
-	let datos = [{test:"Hola es TEST"}];
-    medicamentos.get().then((querySnapshot) => {
+//Funciones de respuesta
+var getMedicamentos = function (req, res, next) {  
+	let datos = [];
+    medicamentosRef.get().then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
             datos.push({
                 key: doc.id,
@@ -40,33 +37,130 @@ app.get('/api', function (req, res) {
 		}).catch((err) => {
 			console.log('Error getting documents', err);
 			res.send(err); 
-		  });
-    
-});
+      });
+};
+var getAsignaciones = function (req, res, next) {  
+	let datos = [];
+    asignacionesRef.get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            datos.push({
+                key: doc.id,
+                data: doc.data()
+				});
+			
+            });
+		res.json(datos);  
+		}).catch((err) => {
+			console.log('Error getting documents', err);
+			res.send(err); 
+      });
+};
+var getMedicos = function (req, res, next) {  
+	let datos = [];
+    medicosRef.get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            datos.push({
+                key: doc.id,
+                data: doc.data()
+				});
+			
+            });
+		res.json(datos);  
+		}).catch((err) => {
+			console.log('Error getting documents', err);
+			res.send(err); 
+      });
+};
+var setAsignation = function (req, res, next) {
+	var newAssign = {};
+	newAssign.medicMat = req.body.medicMat;
+	newAssign.partList = req.body.partList;
+	//Validating Info..
+	if ( newAssign.medicMat && newAssign.partList.length > 0 ) {
+		//Descontando Stock y capturamos estado
+		var sDstatus = stockDisscount(newAssign.partList);
+		
+		if (sDstatus) {
+			//Generamos la Partida y capturamos su estado
+			var cAstatus = createAssign(newAssign);
+			res.json(cAstatus);
+		}else{
+			res.json({error:"Error en Validacion de Stock."});
+		}
+		
 
-// const medicamentos = require("./api/medicamentos/index.js");
+	}else{
+		res.json({error:"Error en Validacion de Datos."});
+	}
+};
 
-//app.engine('hbs', engines.handlebars);
-// app.set('views', '/.views');
-// app.set('view engine', 'hbs');
+var stockDisscount = function(array) {
+	for (let item = 0; item < array.partList.length; item++) {
+		var medRef = array[item].key;
+		//Verificamos exsitencia de pedido.
+		if ( array[item].cantidad > 0) {
+			//Preparando el Decremento de Stock
+			const decreaseBy = admin.firestore.FieldValue.increment( -array[item].cantidad);
+			//Busqueda y Actaulizacion
+			medicamentosRef.doc(medRef).update({cantidad:decreaseBy}).then((doc) => {
+				if (doc.exists) {
+				} else {
+				console.log("No such document!");
+				}
+			})
+		}
+	}
+};
+var createAssign = function(newAssign){
+	asignacionesRef.add(newAssign).then((docRef) => {
+		console.log('Success!!',docRef);
+		return {idReturn:docRef};  
+		}).catch((err) => {
+			console.log('Error getting documents', err);
+			return {error:err}; 
+      });
+};
+var test = function (req, res, next) {
+  res.json({test:"Testeando Rutas"});
+  next()
+};
 
-//Config
+//Middleware
+router.use(function timeLog (req, res, next) {
+  console.log('Time: ', Date.now())
+  console.log('Entro a routeador..')
+  next()
+})
+// router.use('/medicamentos', function(req, res, next) {
+//   console.log('Request URL:', req.originalUrl);
+//   next();
+// }, function (req, res, next) {
+//   console.log('Request Type:', req.method);
+//   next();
+// });
+
+//Enroutamiento
+// router.get('/api/medicamentos', getMedicamentos );
+// router.delete('/medicamentos:id', getMedicamentos );
+// router.get('/medicos', test );
+// router.get('/medi', test );
 
 //Middlers
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:false}));
+app.use(cors({origin:true}));
 
 
-app.use(express.json());
-app.use(express.urlencoded({extended:false}));
-//bd
+//Enrutamiento
+app.get('/medicamentos', getMedicamentos);
+app.get('/medicos', getMedicos);
+app.get('/asignaciones', getAsignaciones);
+app.post('/asignaciones', setAsignation);
+// app.use('/api', function (req, res, next) {
+// 	console.log('Prueba');
+// 	next();
+//   });
 
-app.listen(app.get('port'), () => {console.log("La API se Incio...")});
-
-// Any requests to /api/users will be routed to the user router!
-// app.use("/medicamentos", medicamentos);
-
-// Again, lets be nice and help the poor wandering servers, any requests to /api
-// that are not /api/users will result in 404.
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
+app.listen(app.get('port'), () => {console.log("La API se Incio...", app.get('port'))});
 
 exports.app = functions.https.onRequest(app);

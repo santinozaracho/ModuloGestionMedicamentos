@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import {Container,Row,Col,CardColumns} from 'react-bootstrap';
 import firebase from '../../DataBase';
-import logo from '../../logo.svg';
-
 
 import CreateMedic from './CreateMedic';
+import ShowMedic from './ShowMedic';
 
 class ViewMedics extends Component {
   constructor(props) {
@@ -16,29 +15,41 @@ class ViewMedics extends Component {
     };
     this.handleAddMedic = this.handleAddMedic.bind(this);
     this.removeMedic = this.removeMedic.bind(this);
+    // this.onUpdateCollection = this.onUpdateCollection.bind(this);
+
   }
 
-  onCollectionUpdate = (querySnapshot) => {
-    const medicamentos = [];
-    querySnapshot.forEach((doc) => {
-      medicamentos.push({
-        key: doc.id,
-        data: doc.data()
-      });
-    });
-    this.setState({
-      medicamentos
-   });
-  }
+  // onCollectionUpdate = (querySnapshot) => {
+  //   const medicamentos = [];
+  //   querySnapshot.forEach((doc) => {
+  //     medicamentos.push({
+  //       key: doc.id,
+  //       data: doc.data()
+  //     });
+  //   });
+  //   this.setState({
+  //     medicamentos
+  //  });
+  // }
 
   componentDidMount() {
-    this.unsubscribe = this.ref.onSnapshot(this.onCollectionUpdate);
+    // this.unsubscribe = this.ref.onSnapshot(this.onUpdateCollection);
+    fetch('http://localhost:5000/modulogestionmedicamentos/us-central1/app/medicamentos')
+    .then((response) => {
+      return response.json();})
+    .then((myJson) => {
+      let medicamentos = [];
+      myJson.map( (item) => {
+        medicamentos.push(item); 
+      });
+      this.setState({medicamentos})
+    });
   }
 
   removeMedic(idData) {
-    this.ref.doc(idData).delete().then(function() {
+    this.ref.doc(idData).delete().then( () => {
       console.log("Document successfully deleted!");
-    }).catch(function(error) {
+    }).catch((error) => {
       console.error("Error removing document: ", error);
     });
   }
@@ -49,55 +60,32 @@ class ViewMedics extends Component {
     // })
   }
 
+
+
   render() {
+    console.log("Procesando");
     const medicamentos = this.state.medicamentos.map((medic) => {
+      console.log(medic)
       return (
-        <div className="col-md-4" key={medic.key}>
-          <div className="card mt-4">
-            <div className="card-title text-center">
-              <h3>{medic.data.nombre}</h3>
-              <span className="badge badge-pill badge-danger ml-2">
-                {medic.data.presentacion}
-              </span>
-            </div>
-            <div className="card-body">
-              {medic.data.drogas}
-            </div>
-            <div className="card-body">
-              {medic.data.cantidad}
-            </div>
-            <div className="card-footer">
-              <button
-                className="btn btn-danger"
-                onClick={this.removeMedic.bind(this, medic.key)}>
-                Borrar
-              </button>
-            </div>
-          </div>
-        </div>
+        <ShowMedic key={medic.key} data={medic.data}/>
       )
     });
 
     // RETURN THE COMPONENT
     return (
-      <div className="ViewMedics">
-
-        <div className="container">
-          <div className="row mt-4">
-
-            <div className="col-md-4 mt-5 text-center">
-              <CreateMedic onAddMedic={this.handleAddMedic}></CreateMedic>
-            </div>
-
-            <div className="col-md-8 text-center">
-              <div className="row">
+        <Container className="mt-4">
+          <Row>
+            <Col lg={4}>
+              <CreateMedic onAddMedic={this.handleAddMedic}/>
+            </Col>
+            <Col lg={8}>
+              <CardColumns>
                 {medicamentos}
-              </div>
+              </CardColumns>
+            </Col>     
+          </Row>
+         </Container>
 
-            </div>
-          </div>
-        </div>
-      </div>
     );
   }
 }
