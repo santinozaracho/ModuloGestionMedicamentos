@@ -5,27 +5,53 @@ function simulateNetworkRequest() {
     return new Promise(resolve => setTimeout(resolve, 2000));
   }
   
+function updateMedicament(url,method,sendObj) {
+  return new Promise(resolve => {
+    
+    fetch(url, { method:method, 
+                redirect: 'follow',
+                headers: {
+                          'Accept': 'application/json',
+                          'Content-Type': 'application/json'
+                        },
+                 body: JSON.stringify(sendObj)
+                })
+        .then(response => {
+          return resolve
+          console.log(response);
+          
+            // HTTP 301 response
+            // HOW CAN I FOLLOW THE HTTP REDIRECT RESPONSE?
+        })
+        .catch(function(err) {
+            console.info(err + " url: " + url);
+        });
+  })
+}
+
+
   class SendingButton extends React.Component {
     constructor(props, context) {
       super(props, context);
   
       this.handleClick = this.handleClick.bind(this);
-  
+      this.handleInputChange = this.handleInputChange.bind(this);
       this.state = {
         isLoading: false,
         url:'https://us-central1-modulogestionmedicamentos.cloudfunctions.net/app/medicamentos',
         method:"",
         button:"",
-        color:""
+        color:"",
+        cantidad:""
       };
     }
     componentDidMount() {
       switch (this.props.accessMethod) {
         case "loadMed":
-        this.setState({  method:"PUT",button: "Actualizar",color:"outline-success" });
+        this.setState({  method:"PUT",putInfo:"Load",button: "Actualizar",color:"outline-success" });
             break;
         case "controlMed":
-        this.setState({  method:"PUT",button: "Corregir",color:"outline-warning" });
+        this.setState({  method:"PUT",putInfo:"Control",button: "Corregir",color:"outline-warning" });
             break;
         case "adminMed":
         this.setState({  method:"DELETE",button: "Borrar",color:"outline-danger" });
@@ -37,9 +63,18 @@ function simulateNetworkRequest() {
       }
     }
 
+    handleInputChange(e) {
+      const { value } = e.target;
+      console.log(value);
+      this.setState({
+          cantidad:value
+      });
+  }
+
     handleClick() {
+      
       this.setState({ isLoading: true }, () => {
-        simulateNetworkRequest().then(() => {
+        updateMedicament(this.state.url,this.state.method,this.state).then(() => {
           this.setState({ isLoading: false });
         });
       });
@@ -48,11 +83,13 @@ function simulateNetworkRequest() {
     render() {
       
       const { isLoading } = this.state;
-  
+
       return (
         <InputGroup className="mb-3">
             {isLoading ? '' : 
-            <FormControl width="25"
+            <FormControl width="25" value={this.state.cantidad}
+              onChange = {this.handleInputChange}
+                name="cantidad"
                 placeholder="Cantidad"
                 aria-label="Recipient's new Stock"
                 aria-describedby="basic-addon"/> 
