@@ -139,8 +139,50 @@ let createMedicamento = (req, res, next) => {
 		res.status(401).send(err)
 		console.log('Error getting documents', err);});
 };
-let updateMedic =(req,res,next)=>{
+//Selector de Puts de Medicinas
+let putMedicamento = (req,res,next)=>{
 
+	if (req.body.putInfo == 'Load') {
+		 loadMedic(req.body,res)	
+	}else{
+		controlMedic(req.body,res);
+	}
+	
+};
+
+let loadMedic = (newLoadMedic,res)=>{
+	
+	newLoadMedic.loadDate = FieldValue.serverTimestamp();
+	const loadBy = FieldValue.increment(parseInt(newLoadMedic.cantidad));
+	medicamentosRef.doc(newLoadMedic.key).update({"cantidad":loadBy,"loadDate":newLoadMedic.loadDate})
+	.then( (docRef) => {
+		res.status(200).send("Updated!!")
+		console.log("Success!!!");})
+	.catch((err) => {
+		res.status(401).send(err)
+		console.log('Error getting documents', err);});
+};
+
+let controlMedic = (newControlMedic,res)=>{
+	newControlMedic.controlDate = FieldValue.serverTimestamp();
+	medicamentosRef.doc(newControlMedic.key).update({"cantidad":parseInt(newControlMedic.cantidad),"controlDate":newControlMedic.controlDate})
+	.then( (docRef) => {
+		res.status(200).send("Updated!!")
+		console.log("Success!!!");})
+	.catch((err) => {
+		res.status(401).send(err)
+		console.log('Error getting documents', err);});
+};
+
+let deleteMedicamento = (req,res,next)=>{
+	let delMedic = req.body;
+	medicamentosRef.doc(delMedic.key).delete()
+	.then((docRef) => {
+		res.status(200).send("Deleted!")
+		console.log("Success!!! Delete!!");})
+	.catch((err) => {
+		res.status(401).send(err)
+		console.log('Error getting documents', err);});
 };
 
 var test = function (req, res, next) {
@@ -148,4 +190,4 @@ var test = function (req, res, next) {
   next()
 };
 
-module.exports = {getAsignaciones,getMedicamentos,getMedicos,setAsignation,test,createMedicamento}
+module.exports = {getAsignaciones,getMedicamentos,getMedicos,setAsignation,test,createMedicamento,deleteMedicamento,putMedicamento}

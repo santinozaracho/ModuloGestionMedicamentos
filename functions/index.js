@@ -8,7 +8,7 @@ const router = express.Router();
 const cors = require('cors');
 
 
-//Middleware
+//Middlewares
 router.use(function timeLog (req, res, next) {
   console.log('Time: ', Date.now())
   console.log('Entro a routeador..')
@@ -20,12 +20,20 @@ app.use(bodyParser.urlencoded({extended:false}));
 app.use(cors({origin:true}));
 
 
-//Enrutamiento
+//Enrutamiento INICIO
 app.get('/', impCtrls.test);
+
+//Enrutamiento Medicamentos..
 app.get('/medicamentos', impCtrls.getMedicamentos);
 app.post('/medicamentos', impCtrls.createMedicamento);
-app.del('/medicamentos:id', impCtrls.getMedicamentos);
-app.get('/medicos', impCtrls.getMedicos);
+app.put('medicamentos', impCtrls.putMedicamento)
+app.del('/medicamentos', impCtrls.deleteMedicamento);
+
+//Enrutamiento Controles y Cargas
+app.get('/controles', impCtrls.getMedicos);
+app.get('/cargas', impCtrls.getMedicos);
+
+//Enrutamiento Asignaciones
 app.get('/asignaciones', impCtrls.getAsignaciones);
 app.post('/asignaciones', impCtrls.setAsignation);
 
