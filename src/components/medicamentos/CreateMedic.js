@@ -9,7 +9,8 @@ class CreateMedic extends Component {
             cantidad: '',
             codigo: '',
             drogas: '',
-            presentacion: '',
+            presentaciontipo:'Comprimidos',
+            presentacioncant:'',
           validated:false};
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -99,20 +100,20 @@ class CreateMedic extends Component {
               <Form.Row >
               <Form.Label>Presentacion:</Form.Label>
                 <Form.Group as={Col} lg={8}> 
-                  <Form.Control as="select"  name = "presentacion" value = { this.state.presentacion.tipo }
-                  onChange = {this.handleInputChange} placeholder= ''>
-                    <option>Comprimidos</option>
-                    <option>Capsulas</option>
-                    <option>Solucion</option>
-                    <option>Jarabe</option>
-                    <option>Pomada</option>
+                  <Form.Control as="select"  name = "presentaciontipo" value = { this.state.presentaciontipo }
+                  onChange = {this.handleInputChange}>
+                    <option value="Comprimidos">Comprimidos</option>
+                    <option value="Capsulas">Capsulas</option>
+                    <option value="Solucion">Solucion</option>
+                    <option value="Jarabe">Jarabe</option>
+                    <option value="Pomada">Pomada</option>
                   </Form.Control>
                   
                 </Form.Group> 
                 <Form.Group as={Col} lg={4}>
                   
-                  <Form.Control type="text" required name = "presentacion" value = { this.state.presentacion.cant }
-                  onChange = {this.handleInputChange} placeholder= 'un'>
+                  <Form.Control type="text" required name = "presentacioncant" value = { this.state.presentacioncant }
+                  onChange = {this.handleInputChange} placeholder='un'>
                   </Form.Control>
                   
                 </Form.Group> 

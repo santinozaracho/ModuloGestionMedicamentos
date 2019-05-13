@@ -139,6 +139,9 @@ let createMedicamento = (req, res, next) => {
 		res.status(401).send(err)
 		console.log('Error getting documents', err);});
 };
+let updateMedic =(req,res,next)=>{
+
+};
 
 var test = function (req, res, next) {
   res.json({test:"Testeando Rutas"});
