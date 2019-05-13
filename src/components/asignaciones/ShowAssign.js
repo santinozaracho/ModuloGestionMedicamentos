@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Button,Card,Badge, InputGroup, FormControl,ListGroup} from 'react-bootstrap';
+import { Button,Card,Badge,ListGroup} from 'react-bootstrap';
 // import SendingButton from './sendingButton.js';
 
 
@@ -23,7 +23,7 @@ class ShowAssign extends Component{
                 </Card.Header>
                 
                 <Card.Body>
-                    <Badge variant="danger">{Date(this.props.data.partDate)}</Badge>
+                    <Badge variant="danger">{Date(this.props.data.partDate).substring(0,21)}</Badge>
                     
                         <ListGroup>
                             {partida}

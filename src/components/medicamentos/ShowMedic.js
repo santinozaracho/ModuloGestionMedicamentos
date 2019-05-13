@@ -40,7 +40,7 @@ class ShowMedic extends Component{
                     <Badge variant="danger">{this.props.data.presentacion.cant} {this.props.data.presentacion.tipo}</Badge>
                     <Card.Text>{this.props.data.drogas}</Card.Text>
                     <Card.Text>Cantidad:{this.props.data.cantidad}</Card.Text>
-                    <Card.Text>{Date(this.props.data.updatedDate)}</Card.Text>
+                    <Card.Text>{Date(this.props.data.updatedDate).substring(0,21)}</Card.Text>
                 </Card.Body>
                 <Card.Footer>{footer}</Card.Footer>
             </Card>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Container,Row,Col,CardColumns} from 'react-bootstrap';
+import {Container,Row,CardColumns} from 'react-bootstrap';
 
 import ShowAssign from './ShowAssign';
 
