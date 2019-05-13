@@ -4,7 +4,7 @@ import firebase from '../../DataBase';
 
 import ShowMedic from './ShowMedic';
 
-class ViewMedics extends Component {
+class ViewControls extends Component {
   constructor(props) {
     super(props);
     this.ref = firebase.firestore().collection('medicamentos');
@@ -48,17 +48,17 @@ class ViewMedics extends Component {
     console.log("Procesando");
     const medicamentos = this.state.medicamentos.map((medic) => {
       return (
-        <ShowMedic key={medic.key} docRef={medic.key} accessMethod="adminMed" data={medic.data}/>
+        <ShowMedic key={medic.key} docRef={medic.key} accessMethod="controlMed" data={medic.data}/>
       )
     });
 
     // RETURN THE COMPONENT
     return (
         <Container className="mt-4">
-          <Row> 
+          <Row>
             <CardColumns className="w-75 mx-auto">
               {medicamentos}
-            </CardColumns>     
+            </CardColumns> 
           </Row>
          </Container>
 
@@ -66,4 +66,4 @@ class ViewMedics extends Component {
   }
 }
 
-export default ViewMedics;
+export default ViewControls;

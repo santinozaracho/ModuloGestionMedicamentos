@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import {Container,Row,Col,CardColumns} from 'react-bootstrap';
 import firebase from '../../DataBase';
 
+import CreateMedic from './CreateMedic';
 import ShowMedic from './ShowMedic';
 
-class ViewMedics extends Component {
+class ViewLoads extends Component {
   constructor(props) {
     super(props);
     this.ref = firebase.firestore().collection('medicamentos');
@@ -48,17 +49,22 @@ class ViewMedics extends Component {
     console.log("Procesando");
     const medicamentos = this.state.medicamentos.map((medic) => {
       return (
-        <ShowMedic key={medic.key} docRef={medic.key} accessMethod="adminMed" data={medic.data}/>
+        <ShowMedic key={medic.key} docRef={medic.key} accessMethod="loadMed" data={medic.data}/>
       )
     });
 
     // RETURN THE COMPONENT
     return (
         <Container className="mt-4">
-          <Row> 
-            <CardColumns className="w-75 mx-auto">
-              {medicamentos}
-            </CardColumns>     
+          <Row>
+            <Col lg={4}>
+              <CreateMedic/>
+            </Col>
+            <Col lg={8}>
+              <CardColumns>
+                {medicamentos}
+              </CardColumns>
+            </Col>     
           </Row>
          </Container>
 
@@ -66,4 +72,4 @@ class ViewMedics extends Component {
   }
 }
 
-export default ViewMedics;
+export default ViewLoads;

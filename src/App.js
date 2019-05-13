@@ -8,8 +8,9 @@ import './App.css';
 import Inicio from './components/inicio/Inicio'
 import Navigation from './components/menu/Navigation';
 import ViewMedics from './components/medicamentos/ViewMedics';
-import {navegacion} from './components/menu/navegacion.json'
-import Container from 'react-bootstrap/Container'
+import ViewLoads from './components/medicamentos/ViewLoads';
+import ViewControls from './components/medicamentos/ViewControls';
+import {Container} from 'react-bootstrap'
 
 class App extends Component {
   constructor(props) {
@@ -27,6 +28,9 @@ class App extends Component {
       switch (appSelected) {
         case 'HOME': this.setState({appLoaded:<Inicio></Inicio>});break;
         case 'MEDIC': this.setState({appLoaded:<ViewMedics></ViewMedics>});break;
+        case 'CONTROLES': this.setState({appLoaded:<ViewControls></ViewControls>});break;
+        case 'CARGAS': this.setState({appLoaded:<ViewLoads></ViewLoads>});break;
+        case 'ASIGN': this.setState({appLoaded:<ViewMedics></ViewMedics>});break;
         default: this.setState({appLoaded:<Inicio></Inicio>})
       }
     // })

@@ -14,12 +14,15 @@ ReactDOM.render(
   <Router>
       <div>
         <Route exact path='/' component={App} />
-        <Route exact path='/components/medicamentos/ViewMedics' component={ViewMedics} />
       </div>
   </Router>,
   document.getElementById('root')
 );
 
+
+
+
+// <Route exact path='/components/medicamentos/ViewMedics' component={ViewMedics} />
 // <Route path='/edit/:id' component={Edit} />
 // <Route path='/create' component={Create} />
 // <Route path='/show/:id' component={Show} />

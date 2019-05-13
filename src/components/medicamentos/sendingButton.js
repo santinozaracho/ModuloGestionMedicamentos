@@ -1,0 +1,73 @@
+import React from 'react';
+import {Button,InputGroup,FormControl} from 'react-bootstrap';
+
+function simulateNetworkRequest() {
+    return new Promise(resolve => setTimeout(resolve, 2000));
+  }
+  
+  class SendingButton extends React.Component {
+    constructor(props, context) {
+      super(props, context);
+  
+      this.handleClick = this.handleClick.bind(this);
+  
+      this.state = {
+        isLoading: false,
+        url:'https://us-central1-modulogestionmedicamentos.cloudfunctions.net/app/medicamentos',
+        method:"",
+        button:"",
+        color:""
+      };
+    }
+    componentDidMount() {
+      switch (this.props.accessMethod) {
+        case "loadMed":
+        this.setState({  method:"PUT",button: "Actualizar",color:"outline-success" });
+            break;
+        case "controlMed":
+        this.setState({  method:"PUT",button: "Corregir",color:"outline-warning" });
+            break;
+        case "adminMed":
+        this.setState({  method:"DELETE",button: "Borrar",color:"outline-danger" });
+            break;
+        default:
+        //OlyView
+        this.setState({ isLoading: false });
+            break;
+      }
+    }
+
+    handleClick() {
+      this.setState({ isLoading: true }, () => {
+        simulateNetworkRequest().then(() => {
+          this.setState({ isLoading: false });
+        });
+      });
+    }
+  
+    render() {
+      
+      const { isLoading } = this.state;
+  
+      return (
+        <InputGroup className="mb-3">
+            {isLoading ? '' : 
+            <FormControl width="25"
+                placeholder="Cantidad"
+                aria-label="Recipient's new Stock"
+                aria-describedby="basic-addon"/> 
+            }
+            <InputGroup.Append>
+                <Button variant={isLoading ? "secondary" : this.state.color}
+                block
+                disabled={isLoading}
+                onClick={!isLoading ? this.handleClick : null}>
+                {isLoading ? 'Enviando...' : this.state.button}
+                </Button>
+            </InputGroup.Append>
+        </InputGroup>
+
+      );
+    }
+  }
+ export default SendingButton;
