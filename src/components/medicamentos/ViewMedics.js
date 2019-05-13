@@ -1,34 +1,20 @@
 import React, { Component } from 'react';
 import {Container,Row,Col,CardColumns} from 'react-bootstrap';
-import firebase from '../../DataBase';
 
 import ShowMedic from './ShowMedic';
 
 class ViewMedics extends Component {
   constructor(props) {
     super(props);
-    this.ref = firebase.firestore().collection('medicamentos');
     this.unsubscribe = null;
     this.state = {
       medicamentos: []
     };
-  
-    // this.onUpdateCollection = this.onUpdateCollection.bind(this);
 
   }
 
-  // onCollectionUpdate = (querySnapshot) => {
-  //   const medicamentos = [];
-  //   querySnapshot.forEach((doc) => {
-  //     medicamentos.push({
-  //       key: doc.id,
-  //       data: doc.data()
-  //     });0
-  //   });
-  //   this.setState({
-  //     medicamentos
-  //  });
-  // }
+ 
+
 
   componentDidMount() {
     // this.unsubscribe = this.ref.onSnapshot(this.onUpdateCollection);
@@ -46,9 +32,9 @@ class ViewMedics extends Component {
 
   render() {
     console.log("Procesando");
-    const medicamentos = this.state.medicamentos.map((medic) => {
+    const medicamentos = this.state.medicamentos.map((assign) => {
       return (
-        <ShowMedic key={medic.key} docRef={medic.key} accessMethod="adminMed" data={medic.data}/>
+        <ShowMedic key={assign.key} docRef={assign.key} accessMethod="adminMed" data={assign.data}/>
       )
     });
 

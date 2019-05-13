@@ -10,6 +10,7 @@ import Navigation from './components/menu/Navigation';
 import ViewMedics from './components/medicamentos/ViewMedics';
 import ViewLoads from './components/medicamentos/ViewLoads';
 import ViewControls from './components/medicamentos/ViewControls';
+import ViewAssigns from './components/asignaciones/ViewAssigns';
 import {Container} from 'react-bootstrap'
 
 class App extends Component {
@@ -30,7 +31,7 @@ class App extends Component {
         case 'MEDIC': this.setState({appLoaded:<ViewMedics></ViewMedics>});break;
         case 'CONTROLES': this.setState({appLoaded:<ViewControls></ViewControls>});break;
         case 'CARGAS': this.setState({appLoaded:<ViewLoads></ViewLoads>});break;
-        case 'ASIGN': this.setState({appLoaded:<ViewMedics></ViewMedics>});break;
+        case 'ASIGN': this.setState({appLoaded:<ViewAssigns></ViewAssigns>});break;
         default: this.setState({appLoaded:<Inicio></Inicio>})
       }
     // })

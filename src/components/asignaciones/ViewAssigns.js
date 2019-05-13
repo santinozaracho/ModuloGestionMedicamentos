@@ -1,88 +1,57 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import {Container,Row,Col,CardColumns} from 'react-bootstrap';
 
+import ShowAssign from './ShowAssign';
 
-// data
-import { medicamentos } from './medicamentos.json';
-
-// subcomponents
-import MedicForm from './MedicForm';
-
-class ViewMedics extends Component {
-  constructor() {
-    super();
+class ViewAssigns extends Component {
+  constructor(props) {
+    super(props);
+    this.unsubscribe = null;
     this.state = {
-      medicamentos
-    }
-    this.handleAddMedic = this.handleAddMedic.bind(this);
+      asignaciones: []
+    };
+
   }
 
-  removemedic(index) {
-    this.setState({
-      medicamentos: this.state.medicamentos.filter((e, i) => {
-        return i !== index
-      })
+ 
+
+
+  componentDidMount() {
+    // this.unsubscribe = this.ref.onSnapshot(this.onUpdateCollection);
+    fetch('https://us-central1-modulogestionmedicamentos.cloudfunctions.net/app/asignaciones')
+    .then((response) => {
+      return response.json();})
+    .then((myJson) => {
+      let asignaciones = [];
+      myJson.map( (item) => {
+        asignaciones.push(item); 
+      });
+      this.setState({asignaciones})
     });
   }
 
-  handleAddMedic(medic) {
-    this.setState({
-      medicamentos: [...this.state.medicamentos, medic]
-    })
-  }
-
   render() {
-    const medicamentos = this.state.medicamentos.map((medic, i) => {
+    console.log("Procesando");
+    console.log(this.state.asignaciones);
+    
+    const asignaciones = this.state.asignaciones.map((assign) => {
       return (
-        <div className="col-md-4" key={i}>
-          <div className="card mt-4">
-            <div className="card-title text-center">
-              <h3>{medic.nombre}</h3>
-              <span className="badge badge-pill badge-danger ml-2">
-                {medic.presentacion}
-              </span>
-            </div>
-            <div className="card-body">
-              {medic.drogas}
-            </div>
-            <div className="card-body">
-              {medic.cantidad}
-            </div>
-            <div className="card-footer">
-              <button
-                className="btn btn-danger"
-                onClick={this.removemedic.bind(this, i)}>
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
+        <ShowAssign key={assign.key} docRef={assign.key} accessMethod="adminMed" data={assign.data}/>
       )
     });
 
     // RETURN THE COMPONENT
     return (
-      <div className="ViewMedics">
+        <Container className="mt-4">
+          <Row> 
+            <CardColumns className="w-75 mx-auto">
+              {asignaciones}
+            </CardColumns>     
+          </Row>
+         </Container>
 
-        <div className="container">
-          <div className="row mt-4">
-
-            <div className="col-md-4 text-center">
-                <img src={logo} className="App-logo" alt="logo" />
-              <MedicForm onAddMedic={this.handleAddMedic}></MedicForm>
-            </div>
-
-            <div className="col-md-8">
-              <div className="row">
-                {medicamentos}
-              </div>
-
-            </div>
-          </div>
-        </div>
-      </div>
     );
   }
 }
 
-export default ViewMedics;
+export default ViewAssigns;
