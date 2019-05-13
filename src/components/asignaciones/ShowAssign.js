@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Button,Card,Badge,ListGroup} from 'react-bootstrap';
+import { Button,Card,Badge,Table,ListGroup} from 'react-bootstrap';
 // import SendingButton from './sendingButton.js';
 
 
@@ -12,23 +12,28 @@ class ShowAssign extends Component{
     render() {
 
         const partida = this.props.data.partList.map( (medicamento) => {
-                return(<ListGroup.Item key={medicamento.key} > {medicamento.codigo} : {medicamento.cantidad} </ListGroup.Item>)
+                return(<tr><td> {medicamento.codigo}</td>
+                            <td>{medicamento.cantidad}</td></tr>)
         })
         
         // footer = <Button variant="danger">Borrar</Button>;
         return(
             <Card className="text-center">
                 <Card.Header>
-                    <h4 className="text-uppercase">{this.props.data.medicId}</h4>
+                    <Card.Title className="text-uppercase">{this.props.data.medicId}</Card.Title>
                 </Card.Header>
                 
                 <Card.Body>
                     <Badge variant="danger">{Date(this.props.data.partDate).substring(0,21)}</Badge>
-                    
-                        <ListGroup>
+                    <Table striped bordered hover size="sm">
+                        <thead>
+                            <th>Codigo</th>
+                            <th>Cantidad</th>
+                        </thead>
+                        <tbody>
                             {partida}
-                        </ListGroup>
-                    
+                        </tbody>      
+                    </Table>          
                 </Card.Body>
                 <Card.Footer><Button variant="primary">CopyKey</Button></Card.Footer>
             </Card>
