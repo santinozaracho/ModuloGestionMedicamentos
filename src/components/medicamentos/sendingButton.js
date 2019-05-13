@@ -42,6 +42,7 @@ function updateMedicament(url,method,sendObj) {
         method:"",
         button:"",
         color:"",
+        key:"",
         cantidad:""
       };
     }
@@ -67,6 +68,7 @@ function updateMedicament(url,method,sendObj) {
       const { value } = e.target;
       console.log(value);
       this.setState({
+          key:value,
           cantidad:value
       });
   }
@@ -74,6 +76,7 @@ function updateMedicament(url,method,sendObj) {
     handleClick() {
       
       this.setState({ isLoading: true }, () => {
+        this.setState({key:this.props.key})
         updateMedicament(this.state.url,this.state.method,this.state).then(() => {
           this.setState({ isLoading: false });
         });

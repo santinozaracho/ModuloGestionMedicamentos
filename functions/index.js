@@ -26,7 +26,7 @@ app.get('/', impCtrls.test);
 //Enrutamiento Medicamentos..
 app.get('/medicamentos', impCtrls.getMedicamentos);
 app.post('/medicamentos', impCtrls.createMedicamento);
-app.put('medicamentos', impCtrls.putMedicamento)
+app.put('/medicamentos', impCtrls.putMedicamento)
 app.del('/medicamentos', impCtrls.deleteMedicamento);
 
 //Enrutamiento Controles y Cargas

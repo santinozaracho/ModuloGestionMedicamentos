@@ -13,7 +13,7 @@ class ShowMedic extends Component{
         let footer
         switch (this.props.accessMethod) {
             case "loadMed":
-                footer = <SendingButton accessMethod={this.props.accessMethod} />
+                footer = <SendingButton key={this.props.docRef} accessMethod={this.props.accessMethod} />
                 break;
             case "controlMed":
                 footer = <SendingButton accessMethod={this.props.accessMethod} />
