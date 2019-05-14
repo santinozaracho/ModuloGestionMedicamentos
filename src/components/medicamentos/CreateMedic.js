@@ -1,6 +1,25 @@
 import React, { Component } from 'react';
 import {Card,Row,Button,Col,Form} from 'react-bootstrap';
 
+function sendMedicamento(sendObj) {
+  return new Promise(resolve => {
+
+    console.log(sendObj);
+    var url = 'https://us-central1-modulogestionmedicamentos.cloudfunctions.net/app/medicamentos';
+    fetch(url, { method: 'POST', 
+                redirect: 'error',
+                headers: {
+                          'Accept': 'application/json',
+                          'Content-Type': 'application/json'
+                        },
+                  body: JSON.stringify(sendObj)})
+        .then(response => {
+          console.log(response);})
+        .catch(function(err) {
+            console.info(err + " url: " + url);});
+    setTimeout(resolve, 1000)})
+}
+
 class CreateMedic extends Component {
     constructor() {
         super();
@@ -28,40 +47,18 @@ class CreateMedic extends Component {
         event.stopPropagation();
       }else{
         // SEND DATAAAA
-        var url = 'https://us-central1-modulogestionmedicamentos.cloudfunctions.net/app/medicamentos';
-        fetch(url, { method: 'POST', 
-                    redirect: 'follow',
-                    headers: {
-                              'Accept': 'application/json',
-                              'Content-Type': 'application/json'
-                            },
-                     body: JSON.stringify(this.state)
-                    })
-            .then(response => {
-              console.log(response);
-              
-                // HTTP 301 response
-                // HOW CAN I FOLLOW THE HTTP REDIRECT RESPONSE?
-            })
-            .catch(function(err) {
-                console.info(err + " url: " + url);
-            });
-        // (async () => {
-        //   const rawResponse = await fetch('https://us-central1-modulogestionmedicamentos.cloudfunctions.net/app/medicamentos', {
-        //     method: 'POST',
-        //     redirect: 'follow',
-        //     headers: {
-        //       'Accept': 'application/json',
-        //       'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify(this.state)
-        //   });
-        //   const content = await rawResponse.json();
-        
-        //   console.log(content);
-        // })();
+         sendMedicamento(this.state).then(() => {
+          console.log("Si")
+          this.setState({ 
+            nombre: '',
+            cantidad: '',
+            codigo: '',
+            drogas: '',
+            presentaciontipo:'Comprimidos',
+            presentacioncant:'',
+            validated: true});
+        });
       }
-      this.setState({ validated: true });
     }
 
     handleInputChange(e) {

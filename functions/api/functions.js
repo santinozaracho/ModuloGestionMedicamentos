@@ -133,7 +133,7 @@ let createMedicamento = (req, res, next) => {
 	//Añadimos
 	medicamentosRef.add(newMed)
 	.then( (docRef) => {
-		res.status(201).send(docRef.id)
+		res.status(200).send(docRef.id)
 		console.log("Success!!!"+ docRef.id);})
 	.catch((err) => {
 		res.status(401).send(err)
@@ -141,42 +141,45 @@ let createMedicamento = (req, res, next) => {
 };
 //Selector de Puts de Medicinas
 let putMedicamento = (req,res,next)=>{
-
 	if (req.body.putInfo == 'Load') {
-		 loadMedic(req.body,res)	
+		 loadMedic(req.body)	
 	}else{
-		controlMedic(req.body,res);
+		controlMedic(req.body);
 	}
 	
 };
 
-let loadMedic = (newLoadMedic,res)=>{
+let loadMedic = (newLoadMedic)=>{
+	if (newLoadMedic.docRef) {
+		console.log(newLoadMedic.docRef);
+		let docRef = newLoadMedic.docRef;
+		newLoadMedic.loadDate = FieldValue.serverTimestamp();
+		const loadBy = FieldValue.increment(parseInt(newLoadMedic.cantidad));
+		medicamentosRef.doc(docRef).update({"cantidad":loadBy,"loadDate":newLoadMedic.loadDate})
+		.then( (docRef) => {
+			console.log("Success!!!");})
+		.catch((err) => {
+			
+			console.log('Error getting documents', err);});
+	}
 	
-	newLoadMedic.loadDate = FieldValue.serverTimestamp();
-	const loadBy = FieldValue.increment(parseInt(newLoadMedic.cantidad));
-	medicamentosRef.doc(newLoadMedic.key).update({"cantidad":loadBy,"loadDate":newLoadMedic.loadDate})
-	.then( (docRef) => {
-		res.status(200).send("Updated!!")
-		console.log("Success!!!");})
-	.catch((err) => {
-		res.status(401).send(err)
-		console.log('Error getting documents', err);});
 };
 
-let controlMedic = (newControlMedic,res)=>{
+let controlMedic = (newControlMedic)=>{
+	console.log(newControlMedic.docRef);
+		let docRef = newControlMedic.docRef;
 	newControlMedic.controlDate = FieldValue.serverTimestamp();
-	medicamentosRef.doc(newControlMedic.key).update({"cantidad":parseInt(newControlMedic.cantidad),"controlDate":newControlMedic.controlDate})
+	medicamentosRef.doc(docRef).update({"cantidad":parseInt(newControlMedic.cantidad),"controlDate":newControlMedic.controlDate})
 	.then( (docRef) => {
-		res.status(200).send("Updated!!")
 		console.log("Success!!!");})
 	.catch((err) => {
-		res.status(401).send(err)
+
 		console.log('Error getting documents', err);});
 };
 
 let deleteMedicamento = (req,res,next)=>{
 	let delMedic = req.body;
-	medicamentosRef.doc(delMedic.key).delete()
+	medicamentosRef.doc(delMedic.docRef).delete()
 	.then((docRef) => {
 		res.status(200).send("Deleted!")
 		console.log("Success!!! Delete!!");})

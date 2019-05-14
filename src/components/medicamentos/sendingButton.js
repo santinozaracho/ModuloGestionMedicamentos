@@ -8,6 +8,7 @@ function simulateNetworkRequest() {
 function updateMedicament(url,method,sendObj) {
   return new Promise(resolve => {
     
+    console.log(sendObj);
     fetch(url, { method:method, 
                 redirect: 'follow',
                 headers: {
@@ -17,16 +18,14 @@ function updateMedicament(url,method,sendObj) {
                  body: JSON.stringify(sendObj)
                 })
         .then(response => {
-          return resolve
-          console.log(response);
-          
+          console.log(response);  
             // HTTP 301 response
             // HOW CAN I FOLLOW THE HTTP REDIRECT RESPONSE?
         })
         .catch(function(err) {
             console.info(err + " url: " + url);
         });
-  })
+    setTimeout(resolve, 1000)})
 }
 
 
@@ -68,7 +67,6 @@ function updateMedicament(url,method,sendObj) {
       const { value } = e.target;
       console.log(value);
       this.setState({
-          key:value,
           cantidad:value
       });
   }
@@ -76,9 +74,12 @@ function updateMedicament(url,method,sendObj) {
     handleClick() {
       
       this.setState({ isLoading: true }, () => {
-        this.setState({key:this.props.key})
-        updateMedicament(this.state.url,this.state.method,this.state).then(() => {
-          this.setState({ isLoading: false });
+        console.log(this.props.docRef);
+        let sendObj = this.state;
+        sendObj.docRef=this.props.docRef;
+        updateMedicament(this.state.url,this.state.method,sendObj).then(() => {
+          console.log("Si")
+          this.setState({cantidad:'', isLoading: false });
         });
       });
     }

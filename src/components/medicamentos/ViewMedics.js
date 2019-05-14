@@ -34,7 +34,7 @@ class ViewMedics extends Component {
     console.log("Procesando");
     const medicamentos = this.state.medicamentos.map((assign) => {
       return (
-        <ShowMedic key={assign.key} docRef={assign.key} accessMethod="adminMed" data={assign.data}/>
+        <ShowMedic onChange={this.componentDidMount} key={assign.key} docRef={assign.key} accessMethod="adminMed" data={assign.data}/>
       )
     });
 
