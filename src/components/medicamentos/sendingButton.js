@@ -25,7 +25,7 @@ function updateMedicament(url,method,sendObj) {
         .catch(function(err) {
             console.info(err + " url: " + url);
         });
-    setTimeout(resolve, 1000)})
+    setTimeout(resolve, 100)})
 }
 
 

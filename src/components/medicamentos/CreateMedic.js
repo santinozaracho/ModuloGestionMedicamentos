@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import {Card,Row,Button,Col,Form} from 'react-bootstrap';
 
-function sendMedicamento(sendObj) {
-  return new Promise(resolve => {
 
+function sendMedicamento(sendObj) {
+  return new Promise( (resolve,reject) => {
     console.log(sendObj);
     var url = 'https://us-central1-modulogestionmedicamentos.cloudfunctions.net/app/medicamentos';
     fetch(url, { method: 'POST', 

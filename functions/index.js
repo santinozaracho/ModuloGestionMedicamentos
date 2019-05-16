@@ -11,7 +11,6 @@ const cors = require('cors');
 //Middlewares
 router.use(function timeLog (req, res, next) {
   console.log('Time: ', Date.now())
-  console.log('Entro a routeador..')
   next()
 })
 
@@ -27,15 +26,16 @@ app.get('/', impCtrls.test);
 app.get('/medicamentos', impCtrls.getMedicamentos);
 app.post('/medicamentos', impCtrls.createMedicamento);
 app.put('/medicamentos', impCtrls.putMedicamento)
-app.del('/medicamentos', impCtrls.deleteMedicamento);
+app.delete('/medicamentos', impCtrls.delMedicamento);
 
 //Enrutamiento Controles y Cargas
-app.get('/controles', impCtrls.getMedicos);
-app.get('/cargas', impCtrls.getMedicos);
+// app.get('/controles', impCtrls.getMedicos);
+// app.get('/cargas', impCtrls.getMedicos);
 
 //Enrutamiento Asignaciones
 app.get('/asignaciones', impCtrls.getAsignaciones);
 app.post('/asignaciones', impCtrls.setAsignation);
+app.delete('/asignaciones', impCtrls.delAsignaciones);
 
 
 app.listen(app.get('port'), () => {console.log("La API se Incio...", app.get('port'))});
