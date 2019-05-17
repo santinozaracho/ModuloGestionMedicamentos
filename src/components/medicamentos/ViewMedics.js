@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Container,Row,CardColumns} from 'react-bootstrap';
+import {Container,Row,CardColumns,Alert} from 'react-bootstrap';
 
 import ShowMedic from './ShowMedic';
 
@@ -8,35 +8,41 @@ class ViewMedics extends Component {
     super(props);
     this.unsubscribe = null;
     this.state = {
+      url:'https://us-central1-modulogestionmedicamentos.cloudfunctions.net/app/medicamentos',
       medicamentos: []
     };
-
+    this.handleChanges=this.handleChanges.bind(this)
+  
   }
-
- 
-
 
   componentDidMount() {
     // this.unsubscribe = this.ref.onSnapshot(this.onUpdateCollection);
-    fetch('https://us-central1-modulogestionmedicamentos.cloudfunctions.net/app/medicamentos')
-    .then((response) => {
-      return response.json();})
-    .then((myJson) => {
-      let medicamentos = [];
-      myJson.map( (item) => {
-        medicamentos.push(item); 
-      });
-      this.setState({medicamentos})
-    });
+    this.getDataFromAPI()
+    
+  }
+
+  getDataFromAPI = async () => {
+    await fetch(this.state.url)
+        .then((response) => {
+          return response.json()
+        })
+        .then((medicamentos) => {
+          this.setState({medicamentos})
+        })
   }
   
+  handleChanges(){
+    this.getDataFromAPI()
+  }
+
   render() {
-    console.log("Procesando");
-    const medicamentos = this.state.medicamentos.map((assign) => {
-      return (
-        <ShowMedic key={assign.key} docRef={assign.key} accessMethod="adminMed" data={assign.data}/>
-      )
-    });
+    console.log("Solicitando...");
+    console.log(this.state.medicamentos);
+    let medicamentos = <Alert variant="info">No hay Medicamentos</Alert>
+    if (this.state.medicamentos.length > 0) {
+      medicamentos = this.state.medicamentos.map( assign => {
+        return (<ShowMedic key={assign.key} onCRUD={this.handleChanges} docRef={assign.key} accessMethod="adminMed" data={assign.data}/>)
+      });}
 
     // RETURN THE COMPONENT
     return (

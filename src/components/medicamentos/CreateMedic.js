@@ -2,24 +2,6 @@ import React, { Component } from 'react';
 import {Card,Row,Button,Col,Form} from 'react-bootstrap';
 
 
-function sendMedicamento(sendObj) {
-  return new Promise( (resolve,reject) => {
-    console.log(sendObj);
-    var url = 'https://us-central1-modulogestionmedicamentos.cloudfunctions.net/app/medicamentos';
-    fetch(url, { method: 'POST', 
-                redirect: 'error',
-                headers: {
-                          'Accept': 'application/json',
-                          'Content-Type': 'application/json'
-                        },
-                  body: JSON.stringify(sendObj)})
-        .then(response => {
-          console.log(response);})
-        .catch(function(err) {
-            console.info(err + " url: " + url);});
-    setTimeout(resolve, 1000)})
-}
-
 class CreateMedic extends Component {
     constructor() {
         super();
@@ -39,16 +21,34 @@ class CreateMedic extends Component {
     blankState(yes) {
     }
 
+    sendMedicamento(sendObj) {
+      return new Promise( (resolve,reject) => {
+        var url = 'https://us-central1-modulogestionmedicamentos.cloudfunctions.net/app/medicamentos';
+        fetch(url, { method: 'POST', 
+                    headers: {
+                              'Accept': 'application/json',
+                              'Content-Type': 'application/json'
+                            },
+                      body: JSON.stringify(sendObj)})
+            .then(response => {
+              console.log("Se añadio correctamente"+response);})
+            .catch(function(err) {
+                console.info(err);});
+        setTimeout(resolve, 1000)})
+    }
+
 
     handleSubmit(event) {
+      event.preventDefault();
       const form = event.currentTarget;
       if (form.checkValidity() === false) {
         event.preventDefault();
         event.stopPropagation();
       }else{
         // SEND DATAAAA
-         sendMedicamento(this.state).then(() => {
-          console.log("Si")
+        this.sendMedicamento(this.state).then(() => {
+          this.props.onCRUD(event);
+          //Okay WhiteSpaces
           this.setState({ 
             nombre: '',
             cantidad: '',
@@ -56,7 +56,7 @@ class CreateMedic extends Component {
             drogas: '',
             presentaciontipo:'Comprimidos',
             presentacioncant:'',
-            validated: true});
+            validated: false});
         });
       }
     }

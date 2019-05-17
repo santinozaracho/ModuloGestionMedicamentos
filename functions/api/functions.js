@@ -192,6 +192,7 @@ let stockListDisscount = async (array) => {
 		console.log("Fue pre validado?: "+validate);
 		if (validate) {
 			//Recorremos el array de partidas
+			// eslint-disable-next-line array-callback-return
 			array.map(item => {
 				//Descontamos Item..
 				stockDisscount(item)

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Button,Card,Badge,Table,ListGroup} from 'react-bootstrap';
+import {Card,Badge,Table} from 'react-bootstrap';
 import SendingButton from '../medicamentos/SendingButton';
 import Clock from '../Clock'
 
@@ -30,17 +30,12 @@ function apiMagnament(url,method,sendObj) {
 class ShowAssign extends Component{
     constructor(props) {
       super(props);
-      this.state = {
-        url:'https://us-central1-modulogestionmedicamentos.cloudfunctions.net/app/asignaciones',
-        method:"DELETE",
-      }
-      this.handleDelete = this.handleDelete.bind(this)
+      this.state = {}
+      this.handleReenv = this.handleReenv.bind(this)
     }
 
-    handleDelete(){
-        let sendObj={};
-        sendObj.docRef = this.props.docRef;
-        apiMagnament(this.state.url,this.state.method,sendObj)
+    handleReenv(e){
+        this.props.onCRUD(e)
     }
 
 
@@ -70,7 +65,7 @@ class ShowAssign extends Component{
                         </tbody>      
                     </Table>          
                 </Card.Body>
-                <Card.Footer><SendingButton docRef={this.props.docRef} accessMethod={"adminAss"}>Eliminar</SendingButton></Card.Footer>
+                <Card.Footer><SendingButton docRef={this.props.docRef} onListenEv={this.handleReenv} accessMethod={"adminAss"}></SendingButton></Card.Footer>
             </Card>
           )
         }

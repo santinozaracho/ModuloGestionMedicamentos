@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Button,Card,Badge, InputGroup, FormControl} from 'react-bootstrap';
+import { Card,Badge} from 'react-bootstrap';
 import SendingButton from './SendingButton.js';
 import Clock from '../Clock'
 
@@ -7,28 +7,14 @@ import Clock from '../Clock'
 class ShowMedic extends Component{
     constructor(props) {
       super(props);
-      this.state = {}
+      this.state = {};
+      this.handleReenv=this.handleReenv.bind(this)
     }
 
-    render() {
-        let footer
-        switch (this.props.accessMethod) {
-            case "loadMed":
-                footer = <SendingButton docRef={this.props.docRef} accessMethod={this.props.accessMethod} />
-                break;
-            case "controlMed":
-                footer = <SendingButton docRef={this.props.docRef} accessMethod={this.props.accessMethod} />
-                break;
-            case "adminMed":
-                footer = <SendingButton docRef={this.props.docRef} accessMethod={this.props.accessMethod} />
-                break;
-            default:
-            //OlyView
-                footer = <Button variant="primary">CopyKey</Button>
-                break;
-        }   
-        
-        
+    handleReenv(e){
+        this.props.onCRUD(e)
+    }
+    render() {        
         // footer = <Button variant="danger">Borrar</Button>;
         return(
             <Card className="text-center">
@@ -43,7 +29,7 @@ class ShowMedic extends Component{
                     <Card.Text>Cantidad:{this.props.data.cantidad}</Card.Text>
                     <Card.Text><Clock date={this.props.data.loadDate}/></Card.Text>
                 </Card.Body>
-                <Card.Footer>{footer}</Card.Footer>
+                <Card.Footer><SendingButton onListenEv={this.handleReenv} docRef={this.props.docRef} accessMethod={this.props.accessMethod} /></Card.Footer>
             </Card>
           )
         }

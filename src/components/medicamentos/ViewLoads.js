@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {Container,Row,Col,CardColumns} from 'react-bootstrap';
 import firebase from '../../DataBase';
-
 import CreateMedic from './CreateMedic';
 import ShowMedic from './ShowMedic';
 
@@ -11,45 +10,47 @@ class ViewLoads extends Component {
     this.ref = firebase.firestore().collection('medicamentos');
     this.unsubscribe = null;
     this.state = {
+      url:'https://us-central1-modulogestionmedicamentos.cloudfunctions.net/app/medicamentos',
       medicamentos: []
     };
-  
-    // this.onUpdateCollection = this.onUpdateCollection.bind(this);
-
+    this.handleChanges=this.handleChanges.bind(this)
   }
 
-  // onCollectionUpdate = (querySnapshot) => {
-  //   const medicamentos = [];
-  //   querySnapshot.forEach((doc) => {
-  //     medicamentos.push({
-  //       key: doc.id,
-  //       data: doc.data()
-  //     });0
-  //   });
-  //   this.setState({
-  //     medicamentos
-  //  });
-  // }
-
   componentDidMount() {
-    // this.unsubscribe = this.ref.onSnapshot(this.onUpdateCollection);
-    fetch('https://us-central1-modulogestionmedicamentos.cloudfunctions.net/app/medicamentos')
-    .then((response) => {
-      return response.json();})
-    .then((myJson) => {
-      let medicamentos = [];
-      myJson.map( (item) => {
-        medicamentos.push(item); 
-      });
-      this.setState({medicamentos})
-    });
+    this.getDataFromAPI()
+  }
+
+  // componentWillUpdate(){
+  //   setTimeout(() => {
+  //     this.getDataFromAPI()
+  //   }, 10000);
+  // }
+  
+
+  getDataFromAPI = async () => {
+    await fetch(this.state.url,{headers: {
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': 0}})
+        .then((response) => {
+          return response.json()
+        })
+        .then((medicamentos) => {
+          this.setState({medicamentos})
+        })
+  }
+  
+  handleChanges(){
+    // this.forceUpdate()
+    this.getDataFromAPI()
   }
 
   render() {
     console.log("Procesando");
+    console.log(this.state.medicamentos);
     const medicamentos = this.state.medicamentos.map((medic) => {
       return (
-        <ShowMedic key={medic.key} docRef={medic.key} accessMethod="loadMed" data={medic.data}/>
+        <ShowMedic key={medic.key} onCRUD={this.handleChanges} docRef={medic.key} accessMethod="loadMed" data={medic.data}/>
       )
     });
 
@@ -58,10 +59,10 @@ class ViewLoads extends Component {
         <Container className="mt-4">
           <Row>
             <Col lg={4}>
-              <CreateMedic/>
+              <CreateMedic onCRUD={this.handleChanges}/>
             </Col>
             <Col lg={8}>
-              <CardColumns>
+              <CardColumns>     
                 {medicamentos}
               </CardColumns>
             </Col>     

@@ -1,9 +1,9 @@
 import React from 'react';
 import {Button,InputGroup,FormControl} from 'react-bootstrap';
 
-function simulateNetworkRequest() {
-    return new Promise(resolve => setTimeout(resolve, 2000));
-  }
+// function simulateNetworkRequest() {
+//     return new Promise(resolve => setTimeout(resolve, 2000));
+//   }
   
 function updateMedicament(url,method,sendObj) {
   return new Promise(resolve => {
@@ -61,10 +61,11 @@ function updateMedicament(url,method,sendObj) {
         this.setState({ isCommon:false,method:"DELETE",button: "Borrar",color:"outline-danger",url:'https://us-central1-modulogestionmedicamentos.cloudfunctions.net/app/asignaciones' })
             break;
         default:
+        this.setState({ isCommon:false,method:"GET",button: "No hace nada Jeje",color:"outline-primary",url:'https://us-central1-modulogestionmedicamentos.cloudfunctions.net/app' })
         //OlyView
-        this.setState({ isLoading: false });
             break;
       }
+      this.setState({ isLoading: false });
     }
 
     handleInputChange(e) {
@@ -75,16 +76,14 @@ function updateMedicament(url,method,sendObj) {
       });
   }
 
-    handleClick() {
-      
-      this.setState({ isLoading: true }, () => {
-        console.log(this.props.docRef);
+    handleClick(e) {
+      this.setState({ isLoading: true }, async () => {
         let sendObj = this.state;
-        sendObj.docRef=this.props.docRef;
-        updateMedicament(this.state.url,this.state.method,sendObj).then(() => {
-          console.log("Si")
-          this.setState({cantidad:'', isLoading: false });
-        });
+        sendObj.docRef = this.props.docRef;
+        await updateMedicament(this.state.url,this.state.method,sendObj).then( (resp) => {
+          this.setState({cantidad:'',isLoading:false});
+          setTimeout(this.props.onListenEv(e),50); 
+        })
       });
     }
   
