@@ -37,6 +37,7 @@ function updateMedicament(url,method,sendObj) {
       this.handleInputChange = this.handleInputChange.bind(this);
       this.state = {
         isLoading: false,
+        isCommon:true,
         url:'https://us-central1-modulogestionmedicamentos.cloudfunctions.net/app/medicamentos',
         method:"",
         button:"",
@@ -48,13 +49,16 @@ function updateMedicament(url,method,sendObj) {
     componentDidMount() {
       switch (this.props.accessMethod) {
         case "loadMed":
-        this.setState({  method:"PUT",putInfo:"Load",button: "Actualizar",color:"outline-success" });
+        this.setState({ isCommon:true,method:"PUT",putInfo:"Load",button: "Actualizar",color:"outline-success" });
             break;
         case "controlMed":
-        this.setState({  method:"PUT",putInfo:"Control",button: "Corregir",color:"outline-warning" });
+        this.setState({ isCommon:true,method:"PUT",putInfo:"Control",button: "Corregir",color:"outline-warning" });
             break;
         case "adminMed":
-        this.setState({  method:"DELETE",button: "Borrar",color:"outline-danger" });
+        this.setState({ isCommon:false,method:"DELETE",button: "Borrar",color:"outline-danger" });
+            break;
+        case "adminAss":
+        this.setState({ isCommon:false,method:"DELETE",button: "Borrar",color:"outline-danger",url:'https://us-central1-modulogestionmedicamentos.cloudfunctions.net/app/asignaciones' })
             break;
         default:
         //OlyView
@@ -87,9 +91,12 @@ function updateMedicament(url,method,sendObj) {
     render() {
       
       const { isLoading } = this.state;
+      const { isCommon } = this.state;
 
       return (
-        <InputGroup className="mb-3">
+        <div>
+        {isCommon ? 
+          <InputGroup className="mb-3">
             {isLoading ? '' : 
             <FormControl width="25" value={this.state.cantidad}
               onChange = {this.handleInputChange}
@@ -106,8 +113,17 @@ function updateMedicament(url,method,sendObj) {
                 {isLoading ? 'Enviando...' : this.state.button}
                 </Button>
             </InputGroup.Append>
-        </InputGroup>
-
+        </InputGroup>  
+        : 
+        <InputGroup className="mb-3">
+          <Button variant={isLoading ? "secondary" : this.state.color}
+          block
+          disabled={isLoading}
+          onClick={!isLoading ? this.handleClick : null}>
+          {isLoading ? 'Enviando...' : this.state.button}
+          </Button>
+        </InputGroup>}
+        </div>
       );
     }
   }

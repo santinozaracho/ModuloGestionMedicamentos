@@ -84,7 +84,7 @@ let createMedicamento = (req, res) => {
 	//Validamos datos.
 	if (newMed.cantidad >= 0) {
 		//Pegamos la Hora de creacion
-		newMed.LoadDate = FieldValue.serverTimestamp();
+		newMed.loadDate = FieldValue.serverTimestamp();
 		newMed.cantidad=parseInt(newMed.cantidad);
 		delete newMed.validated;
 		//Añadimos

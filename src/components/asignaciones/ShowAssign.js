@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import { Button,Card,Badge,Table,ListGroup} from 'react-bootstrap';
-// import SendingButton from './sendingButton.js';
+import SendingButton from '../medicamentos/SendingButton';
+import Clock from '../Clock'
+
 
 function apiMagnament(url,method,sendObj) {
     return new Promise(resolve => {
@@ -45,7 +47,7 @@ class ShowAssign extends Component{
     render() {
 
         const partida = this.props.data.partList.map( (medicamento) => {
-                return(<tr><td> {medicamento.codigo}</td>
+                return(<tr key={medicamento.key}><td> {medicamento.codigo}</td>
                             <td>{medicamento.cantidad}</td></tr>)
         })
         
@@ -57,7 +59,7 @@ class ShowAssign extends Component{
                 </Card.Header>
                 
                 <Card.Body>
-                    <Badge variant="danger">{Date(this.props.data.partDate).substring(0,21)}</Badge>
+                    <Badge variant="danger"><Clock date={this.props.data.partDate}/></Badge>
                     <Table striped bordered hover size="sm">
                         <thead>
                             <tr><th>Codigo</th>
@@ -68,7 +70,7 @@ class ShowAssign extends Component{
                         </tbody>      
                     </Table>          
                 </Card.Body>
-                <Card.Footer><Button onClick={this.handleDelete} variant="danger">Eliminar</Button></Card.Footer>
+                <Card.Footer><SendingButton docRef={this.props.docRef} accessMethod={"adminAss"}>Eliminar</SendingButton></Card.Footer>
             </Card>
           )
         }

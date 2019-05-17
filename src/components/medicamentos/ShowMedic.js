@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { Button,Card,Badge, InputGroup, FormControl} from 'react-bootstrap';
-import SendingButton from './sendingButton.js';
+import SendingButton from './SendingButton.js';
+import Clock from '../Clock'
 
 
 class ShowMedic extends Component{
@@ -40,7 +41,7 @@ class ShowMedic extends Component{
                     <Badge variant="danger">{this.props.data.presentacioncant} {this.props.data.presentaciontipo}</Badge>
                     <Card.Text>{this.props.data.drogas}</Card.Text>
                     <Card.Text>Cantidad:{this.props.data.cantidad}</Card.Text>
-                    <Card.Text>{Date(this.props.data.updatedDate).substring(0,21)}</Card.Text>
+                    <Card.Text><Clock date={this.props.data.loadDate}/></Card.Text>
                 </Card.Body>
                 <Card.Footer>{footer}</Card.Footer>
             </Card>
