@@ -48,7 +48,7 @@ class ViewControls extends Component {
     console.log("Procesando");
     const medicamentos = this.state.medicamentos.map((medic) => {
       return (
-        <ShowMedic key={medic.key} docRef={medic.key} accessMethod="controlMed" data={medic.data}/>
+        <ShowMedic key={medic.refId} docRef={medic.refId} accessMethod="controlMed" data={medic.data}/>
       )
     });
 

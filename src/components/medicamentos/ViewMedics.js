@@ -41,7 +41,7 @@ class ViewMedics extends Component {
     let medicamentos = <Alert variant="info">No hay Medicamentos</Alert>
     if (this.state.medicamentos.length > 0) {
       medicamentos = this.state.medicamentos.map( assign => {
-        return (<ShowMedic key={assign.key} onCRUD={this.handleChanges} docRef={assign.key} accessMethod="adminMed" data={assign.data}/>)
+        return (<ShowMedic key={assign.refId} onCRUD={this.handleChanges} docRef={assign.refId} accessMethod="adminMed" data={assign.data}/>)
       });}
 
     // RETURN THE COMPONENT

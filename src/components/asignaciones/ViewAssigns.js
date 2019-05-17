@@ -36,7 +36,7 @@ class ViewAssigns extends Component {
     
     const asignaciones = this.state.asignaciones.map((assign) => {
       return (
-        <ShowAssign key={assign.key} docRef={assign.key} accessMethod="adminMed" data={assign.data}/>
+        <ShowAssign key={assign.refId} docRef={assign.refId} accessMethod="adminMed" data={assign.data}/>
       )
     });
 

@@ -50,7 +50,7 @@ class ViewLoads extends Component {
     console.log(this.state.medicamentos);
     const medicamentos = this.state.medicamentos.map((medic) => {
       return (
-        <ShowMedic key={medic.key} onCRUD={this.handleChanges} docRef={medic.key} accessMethod="loadMed" data={medic.data}/>
+        <ShowMedic key={medic.refId} onCRUD={this.handleChanges} docRef={medic.refId} accessMethod="loadMed" data={medic.data}/>
       )
     });
 

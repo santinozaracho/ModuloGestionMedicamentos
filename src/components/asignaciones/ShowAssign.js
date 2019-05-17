@@ -42,7 +42,7 @@ class ShowAssign extends Component{
     render() {
 
         const partida = this.props.data.partList.map( (medicamento) => {
-                return(<tr key={medicamento.key}><td> {medicamento.codigo}</td>
+                return(<tr key={medicamento.refId}><td> {medicamento.codigo}</td>
                             <td>{medicamento.cantidad}</td></tr>)
         })
         

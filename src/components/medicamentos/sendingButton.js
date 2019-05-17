@@ -42,7 +42,7 @@ function updateMedicament(url,method,sendObj) {
         method:"",
         button:"",
         color:"",
-        key:"",
+        refId:"",
         cantidad:""
       };
     }

@@ -1,7 +1,7 @@
 //Conexion a bd
 var admin = require("firebase-admin");
 var FieldValue = admin.firestore.FieldValue;
-var serviceAccount = require("../serviceAccountKey.json");
+var serviceAccount = require("../serviceAccountkey.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
@@ -26,7 +26,7 @@ var getMedicamentos = (req, res, next) => {
     medicamentosRef.get().then( (querySnapshot) => {
         querySnapshot.forEach( (doc) => {
             datos.push({
-                key: doc.id,
+                refId: doc.id,
                 data: doc.data()
 				});
             });
@@ -42,7 +42,7 @@ var getAsignaciones = (req, res, next) => {
     asignacionesRef.get().then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
             datos.push({
-                key: doc.id,
+                refId: doc.id,
                 data: doc.data()
 				});
 			
@@ -64,7 +64,7 @@ var setAsignation = async (req, res, next) => {
 		//Descontando Stock y luego...
 		await stockListDisscount(newAssign.partList)
 		.then( async (resp) => {
-			//Creamos la Partida y Enviamos la key
+			//Creamos la Partida y Enviamos la refId
 			console.log(resp);
 			console.log("Stock descontado totalmente inciando creacion..");
 			
@@ -154,14 +154,14 @@ let delAsignaciones = (req,res,next)=>{
 let preValidaPartidas = (array) => {
 		const status = true;
 		array.forEach( item => {
-			if (!item.key && item.cantidad < 1) {
+			if (!item.refId && item.cantidad < 1) {
 				return false
 			}});
 		return status	
 	};
 //Funcion que Verifica el Stock y Descuenta en la BD
 let stockDisscount = async item =>{
-	let medicItemRef = medicamentosRef.doc(item.key);	
+	let medicItemRef = medicamentosRef.doc(item.refId);	
 	return await medicItemRef.get()
 		.then(async doc => {	
 			if ( doc.exists && doc.data().cantidad >= parseInt(item.cantidad) )  {
@@ -178,7 +178,7 @@ let stockDisscount = async item =>{
 					return Promise.reject(error) });		
 			}else{ 
 				console.log("Se da Cuenta del error");
-				return Promise.reject("No se encontro el doc con key o supera el Stock.");
+				return Promise.reject("No se encontro el doc con refId o supera el Stock.");
 			}})
 		.catch( error => {
 			console.log('Error getting document', error);
