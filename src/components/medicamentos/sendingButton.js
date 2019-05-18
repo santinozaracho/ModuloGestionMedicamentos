@@ -4,31 +4,6 @@ import {Button,InputGroup,FormControl} from 'react-bootstrap';
 // function simulateNetworkRequest() {
 //     return new Promise(resolve => setTimeout(resolve, 2000));
 //   }
-  
-function updateMedicament(url,method,sendObj) {
-  return new Promise(resolve => {
-    
-    console.log(sendObj);
-    fetch(url, { method:method, 
-                redirect: 'follow',
-                headers: {
-                          'Accept': 'application/json',
-                          'Content-Type': 'application/json'
-                        },
-                 body: JSON.stringify(sendObj)
-                })
-        .then(response => {
-          console.log(response);  
-            // HTTP 301 response
-            // HOW CAN I FOLLOW THE HTTP REDIRECT RESPONSE?
-        })
-        .catch(function(err) {
-            console.info(err + " url: " + url);
-        });
-    setTimeout(resolve, 100)})
-}
-
-
   class SendingButton extends React.Component {
     constructor(props, context) {
       super(props, context);
@@ -68,6 +43,19 @@ function updateMedicament(url,method,sendObj) {
       this.setState({ isLoading: false });
     }
 
+    async updateMedicament(url,method,sendObj) {
+      console.log(sendObj);
+      const response = await fetch(url, { method:method, 
+                  redirect: 'follow',
+                  headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                          },
+                    body: JSON.stringify(sendObj)
+                  });
+      return response
+    }
+
     handleInputChange(e) {
       const { value } = e.target;
       console.log(value);
@@ -76,15 +64,16 @@ function updateMedicament(url,method,sendObj) {
       });
   }
 
-    handleClick(e) {
-      this.setState({ isLoading: true }, async () => {
-        let sendObj = this.state;
-        sendObj.docRef = this.props.docRef;
-        await updateMedicament(this.state.url,this.state.method,sendObj).then( (resp) => {
-          this.setState({cantidad:'',isLoading:false});
-          setTimeout(this.props.onListenEv(e),50); 
-        })
-      });
+    async handleClick(e) {
+      let sendObj = this.state;
+      this.setState({ isLoading: true }); 
+      sendObj.docRef = this.props.docRef;
+      const resp = await this.updateMedicament(this.state.url,this.state.method,sendObj);
+      if (resp.ok) {
+        console.log(resp);
+        this.setState({cantidad:'',isLoading:false});
+        this.props.onListenEv(e);
+      }
     }
   
     render() {

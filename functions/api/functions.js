@@ -1,7 +1,7 @@
 //Conexion a bd
 var admin = require("firebase-admin");
 var FieldValue = admin.firestore.FieldValue;
-var serviceAccount = require("../serviceAccountkey.json");
+var serviceAccount = require("../serviceAccountKey.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
@@ -31,6 +31,28 @@ var getMedicamentos = (req, res, next) => {
 				});
             });
 		res.json(datos);})
+		.catch((err) => {
+			console.log('Error getting documents', err);
+			res.status(403).send(err); 
+      });
+};
+var getMedicamento = (req, res, next) => { 
+    medicamentosRef.doc(req.params.docRef).get().then( (doc) => {
+				let datos = {};
+                datos.refId = doc.id;
+				datos.data = doc.data();
+				res.json(datos);})
+		.catch((err) => {
+			console.log('Error getting documents', err);
+			res.status(403).send(err); 
+      });
+};
+var getAsignacion = (req, res, next) => { 
+    asignacionesRef.doc(req.params.docRef).get().then( (doc) => {
+				let datos = {};
+                datos.refId = doc.id;
+				datos.data = doc.data();
+				res.json(datos);})
 		.catch((err) => {
 			console.log('Error getting documents', err);
 			res.status(403).send(err); 
@@ -271,4 +293,4 @@ let test = function (req, res, next) {
   next()
 };
 
-module.exports = {getAsignaciones,getMedicamentos,setAsignation,test,createMedicamento,delMedicamento,putMedicamento,delAsignaciones}
+module.exports = {getAsignaciones,getMedicamentos,setAsignation,test,createMedicamento,delMedicamento,putMedicamento,delAsignaciones,getAsignacion,getMedicamento}

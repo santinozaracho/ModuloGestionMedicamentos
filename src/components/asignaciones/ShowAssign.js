@@ -3,30 +3,6 @@ import {Card,Badge,Table} from 'react-bootstrap';
 import SendingButton from '../medicamentos/SendingButton';
 import Clock from '../Clock'
 
-
-function apiMagnament(url,method,sendObj) {
-    return new Promise(resolve => {
-      
-      console.log(sendObj);
-      fetch(url, { method:method, 
-                  redirect: 'follow',
-                  headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                          },
-                   body: JSON.stringify(sendObj)
-                  })
-          .then(response => {
-            console.log(response);  
-              // HTTP 301 response
-              // HOW CAN I FOLLOW THE HTTP REDIRECT RESPONSE?
-          })
-          .catch(function(err) {
-              console.info(err + " url: " + url);
-          });
-      setTimeout(resolve, 1000)})
-  }
-
 class ShowAssign extends Component{
     constructor(props) {
       super(props);

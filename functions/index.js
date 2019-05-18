@@ -24,6 +24,7 @@ app.get('/', impCtrls.test);
 
 //Enrutamiento Medicamentos..
 app.get('/medicamentos', impCtrls.getMedicamentos);
+app.get('/medicamentos:docRef', impCtrls.getMedicamento);
 app.post('/medicamentos', impCtrls.createMedicamento);
 app.put('/medicamentos', impCtrls.putMedicamento)
 app.delete('/medicamentos', impCtrls.delMedicamento);
@@ -34,6 +35,7 @@ app.delete('/medicamentos', impCtrls.delMedicamento);
 
 //Enrutamiento Asignaciones
 app.get('/asignaciones', impCtrls.getAsignaciones);
+app.get('/asignaciones/:docRef', impCtrls.getAsignacion);
 app.post('/asignaciones', impCtrls.setAsignation);
 app.delete('/asignaciones', impCtrls.delAsignaciones);
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Container,Row,Col,CardColumns} from 'react-bootstrap';
+import {Container,Row,CardColumns} from 'react-bootstrap';
 import firebase from '../../DataBase';
 
 import ShowMedic from './ShowMedic';
@@ -10,45 +10,38 @@ class ViewControls extends Component {
     this.ref = firebase.firestore().collection('medicamentos');
     this.unsubscribe = null;
     this.state = {
+      url:'https://us-central1-modulogestionmedicamentos.cloudfunctions.net/app/medicamentos',
       medicamentos: []
-    };
-  
-    // this.onUpdateCollection = this.onUpdateCollection.bind(this);
+  };
+  this.handleChanges=this.handleChanges.bind(this)
+}
 
-  }
-
-  // onCollectionUpdate = (querySnapshot) => {
-  //   const medicamentos = [];
-  //   querySnapshot.forEach((doc) => {
-  //     medicamentos.push({
-  //       key: doc.id,
-  //       data: doc.data()
-  //     });0
-  //   });
-  //   this.setState({
-  //     medicamentos
-  //  });
-  // }
 
   componentDidMount() {
     // this.unsubscribe = this.ref.onSnapshot(this.onUpdateCollection);
-    fetch('https://us-central1-modulogestionmedicamentos.cloudfunctions.net/app/medicamentos')
-    .then((response) => {
-      return response.json();})
-    .then((myJson) => {
-      let medicamentos = [];
-      myJson.map( (item) => {
-        medicamentos.push(item); 
-      });
-      this.setState({medicamentos})
-    });
+    this.getDataFromAPI()
+    
+  }
+
+  getDataFromAPI = async () => {
+    await fetch(this.state.url)
+        .then((response) => {
+          return response.json()
+        })
+        .then((medicamentos) => {
+          this.setState({medicamentos})
+        })
+  }
+  
+  handleChanges(){
+    this.getDataFromAPI()
   }
 
   render() {
     console.log("Procesando");
     const medicamentos = this.state.medicamentos.map((medic) => {
       return (
-        <ShowMedic key={medic.refId} docRef={medic.refId} accessMethod="controlMed" data={medic.data}/>
+        <ShowMedic key={medic.refId} onCRUD={this.handleChanges} docRef={medic.refId} accessMethod="controlMed" data={medic.data}/>
       )
     });
 
