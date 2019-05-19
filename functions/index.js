@@ -35,7 +35,7 @@ app.delete('/medicamentos', impCtrls.delMedicamento);
 
 //Enrutamiento Asignaciones
 app.get('/asignaciones', impCtrls.getAsignaciones);
-app.get('/asignaciones/:docRef', impCtrls.getAsignacion);
+app.get('/asignaciones/:refId', impCtrls.getAsignacion);
 app.post('/asignaciones', impCtrls.setAsignation);
 app.delete('/asignaciones', impCtrls.delAsignaciones);
 

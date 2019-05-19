@@ -37,7 +37,7 @@ var getMedicamentos = (req, res, next) => {
       });
 };
 var getMedicamento = (req, res, next) => { 
-    medicamentosRef.doc(req.params.docRef).get().then( (doc) => {
+    medicamentosRef.doc(req.params.refId).get().then( (doc) => {
 				let datos = {};
                 datos.refId = doc.id;
 				datos.data = doc.data();
@@ -48,7 +48,7 @@ var getMedicamento = (req, res, next) => {
       });
 };
 var getAsignacion = (req, res, next) => { 
-    asignacionesRef.doc(req.params.docRef).get().then( (doc) => {
+    asignacionesRef.doc(req.params.refId).get().then( (doc) => {
 				let datos = {};
                 datos.refId = doc.id;
 				datos.data = doc.data();
@@ -111,9 +111,9 @@ let createMedicamento = (req, res) => {
 		delete newMed.validated;
 		//Añadimos
 		medicamentosRef.add(newMed)
-		.then( (docRef) => {
-			res.status(200).send(docRef.id)
-			console.log("Success!!!"+ docRef.id);})
+		.then( (doc) => {
+			res.status(200).send(doc.id)
+			console.log("Success!!!"+ doc.id);})
 		.catch((err) => {
 			res.status(401).send(err)
 			console.log('Error getting documents', err);});
@@ -122,15 +122,15 @@ let createMedicamento = (req, res) => {
 	};
 //Selector de Puts de Medicinas para realizar controles o actualizaciones
 let putMedicamento = (req,res,next)=>{
-	if (req.body.docRef) {
+	if (req.body.refId) {
 		if (req.body.putInfo === 'Load') {
 			console.log("Se ejecuta un Carga");
-			loadMedic(req.body,req.body.docRef)
+			loadMedic(req.body,req.body.refId)
 			.then( (resp) => {res.status(200).send(resp.ok)} )
 			.catch( (error) => {res.status(401).send(error.error)} );
 	   	}else{
 			console.log("Se ejecuta un Control");
-			controlMedic(req.body,req.body.docRef)
+			controlMedic(req.body,req.body.refId)
 			.then( (resp) => {res.status(200).send(resp.ok)} )
 			.catch( (error) => {res.status(401).send(error.error)} );
 	   }
@@ -140,10 +140,10 @@ let putMedicamento = (req,res,next)=>{
 //Funcion para la eliminacion de los medicamentos
 let delMedicamento = (req,res,next)=>{
 	let delMedic = req.body;
-	if (delMedic.docRef) {
-		medicamentosRef.doc(delMedic.docRef)
+	if (delMedic.refId) {
+		medicamentosRef.doc(delMedic.refId)
 		.delete()
-		.then((docRef) => {
+		.then((refId) => {
 			res.status(200).send("Deleted!")
 			console.log("Success!!! Delete!!");})
 		.catch((err) => {
@@ -156,10 +156,10 @@ let delMedicamento = (req,res,next)=>{
 //Funcion para la eliminacion de los medicamentos
 let delAsignaciones = (req,res,next)=>{
 	let delAsig = req.body;
-	if (delAsig.docRef) {
-		asignacionesRef.doc(delAsig.docRef)
+	if (delAsig.refId) {
+		asignacionesRef.doc(delAsig.refId)
 		.delete()
-		.then((docRef) => {
+		.then((refId) => {
 			res.status(200).send("Deleted!")
 			console.log("Success!!! Delete!!");})
 		.catch((err) => {
@@ -235,11 +235,11 @@ let createAssign = (newAssign) => {
 		// Realizamos la consulta a  la BD
 		asignacionesRef
 		.add(newAssign)
-		.then( (docRef) => {
+		.then( (refId) => {
 			setTimeout(() => {
-				resolve(docRef.id)
+				resolve(refId.id)
 			}, 100);	
-			console.log("Success!!!"+ docRef.id);})
+			console.log("Success!!!"+ refId.id);})
 		.catch((error) => {
 			reject(error);
 			console.log('Error getting documents', error);});
@@ -247,7 +247,7 @@ let createAssign = (newAssign) => {
 	};
 
 //Si se desea realizar una Carga o Actualizacion de Stock
-let loadMedic = (newLoadMedic,docRef) => {
+let loadMedic = (newLoadMedic,refId) => {
 	return new Promise((resolve,reject) => {
 		if ( newLoadMedic.cantidad > 0 ) {
 			//Registramos Movimiento
@@ -255,9 +255,9 @@ let loadMedic = (newLoadMedic,docRef) => {
 			//Cargamos la Variable de incremento
 			const loadBy = FieldValue.increment(parseInt(newLoadMedic.cantidad));
 			//Realizamos consulta
-			medicamentosRef.doc(docRef)
+			medicamentosRef.doc(refId)
 			.update({"cantidad":loadBy,"loadDate":newLoadMedic.loadDate})
-			.then( (docRef) => {
+			.then( (refId) => {
 				console.log("Success!!!");
 				resolve({ok:"Se Realizo correctamente la Carga."})})
 			.catch((err) => {
@@ -269,14 +269,14 @@ let loadMedic = (newLoadMedic,docRef) => {
 		})
 	};
 //Si se desea realizar un Control o Modificacion del stock!
-let controlMedic = (newControlMedic,docRef)=>{
+let controlMedic = (newControlMedic,refId)=>{
 	return new Promise((resolve,reject) => {
 		if (newControlMedic.cantidad > 0) {
 
 			newControlMedic.controlDate = FieldValue.serverTimestamp();
-			medicamentosRef.doc(docRef)
+			medicamentosRef.doc(refId)
 			.update({"cantidad":parseInt(newControlMedic.cantidad),"controlDate":newControlMedic.controlDate})
-			.then( (docRef) => {
+			.then( (refId) => {
 				console.log("Success!!!");
 				resolve({ok:"Se Realizo correctamente el Control."})})
 			.catch((err) => {

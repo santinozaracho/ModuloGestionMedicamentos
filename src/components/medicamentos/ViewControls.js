@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
 import {Container,Row,CardColumns} from 'react-bootstrap';
-import firebase from '../../DataBase';
 
 import ShowMedic from './ShowMedic';
 
 class ViewControls extends Component {
   constructor(props) {
     super(props);
-    this.ref = firebase.firestore().collection('medicamentos');
-    this.unsubscribe = null;
     this.state = {
       url:'https://us-central1-modulogestionmedicamentos.cloudfunctions.net/app/medicamentos',
       medicamentos: []
@@ -18,7 +15,6 @@ class ViewControls extends Component {
 
 
   componentDidMount() {
-    // this.unsubscribe = this.ref.onSnapshot(this.onUpdateCollection);
     this.getDataFromAPI()
     
   }
@@ -41,7 +37,7 @@ class ViewControls extends Component {
     console.log("Procesando");
     const medicamentos = this.state.medicamentos.map((medic) => {
       return (
-        <ShowMedic key={medic.refId} onCRUD={this.handleChanges} docRef={medic.refId} accessMethod="controlMed" data={medic.data}/>
+        <ShowMedic key={medic.refId} onCRUD={this.handleChanges} refId={medic.refId} accessMethod="controlMed" data={medic.data}/>
       )
     });
 

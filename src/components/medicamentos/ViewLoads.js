@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
 import {Container,Row,Col,CardColumns} from 'react-bootstrap';
-import firebase from '../../DataBase';
 import CreateMedic from './CreateMedic';
 import ShowMedic from './ShowMedic';
 
 class ViewLoads extends Component {
   constructor(props) {
     super(props);
-    this.ref = firebase.firestore().collection('medicamentos');
-    this.unsubscribe = null;
     this.state = {
       url:'https://us-central1-modulogestionmedicamentos.cloudfunctions.net/app/medicamentos',
       medicamentos: []
@@ -19,13 +16,6 @@ class ViewLoads extends Component {
   componentDidMount() {
     this.getDataFromAPI()
   }
-
-  // componentWillUpdate(){
-  //   setTimeout(() => {
-  //     this.getDataFromAPI()
-  //   }, 10000);
-  // }
-  
 
   getDataFromAPI = async () => {
     await fetch(this.state.url,{headers: {
@@ -41,7 +31,6 @@ class ViewLoads extends Component {
   }
   
   handleChanges(){
-    // this.forceUpdate()
     this.getDataFromAPI()
   }
 
@@ -50,7 +39,7 @@ class ViewLoads extends Component {
     console.log(this.state.medicamentos);
     const medicamentos = this.state.medicamentos.map((medic) => {
       return (
-        <ShowMedic key={medic.refId} onCRUD={this.handleChanges} docRef={medic.refId} accessMethod="loadMed" data={medic.data}/>
+        <ShowMedic key={medic.refId} onCRUD={this.handleChanges} refId={medic.refId} accessMethod="loadMed" data={medic.data}/>
       )
     });
 

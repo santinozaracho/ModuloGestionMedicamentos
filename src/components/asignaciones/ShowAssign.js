@@ -41,7 +41,7 @@ class ShowAssign extends Component{
                         </tbody>      
                     </Table>          
                 </Card.Body>
-                <Card.Footer><SendingButton docRef={this.props.docRef} onListenEv={this.handleReenv} accessMethod={"adminAss"}></SendingButton></Card.Footer>
+                <Card.Footer><SendingButton refId={this.props.refId} onListenEv={this.handleReenv} accessMethod={"adminAss"}></SendingButton></Card.Footer>
             </Card>
           )
         }

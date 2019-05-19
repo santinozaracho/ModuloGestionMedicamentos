@@ -29,7 +29,7 @@ class ShowMedic extends Component{
                     <Card.Text>Cantidad:{this.props.data.cantidad}</Card.Text>
                     <Card.Text><Clock date={this.props.data.loadDate}/></Card.Text>
                 </Card.Body>
-                <Card.Footer><SendingButton onListenEv={this.handleReenv} docRef={this.props.docRef} accessMethod={this.props.accessMethod} /></Card.Footer>
+                <Card.Footer><SendingButton onListenEv={this.handleReenv} refId={this.props.refId} accessMethod={this.props.accessMethod} /></Card.Footer>
             </Card>
           )
         }

@@ -6,7 +6,6 @@ import ShowMedic from './ShowMedic';
 class ViewMedics extends Component {
   constructor(props) {
     super(props);
-    this.unsubscribe = null;
     this.state = {
       url:'https://us-central1-modulogestionmedicamentos.cloudfunctions.net/app/medicamentos',
       medicamentos: []
@@ -16,7 +15,6 @@ class ViewMedics extends Component {
   }
 
   componentDidMount() {
-    // this.unsubscribe = this.ref.onSnapshot(this.onUpdateCollection);
     this.getDataFromAPI()
     
   }
@@ -41,7 +39,7 @@ class ViewMedics extends Component {
     let medicamentos = <Alert variant="info">No hay Medicamentos</Alert>
     if (this.state.medicamentos.length > 0) {
       medicamentos = this.state.medicamentos.map( assign => {
-        return (<ShowMedic key={assign.refId} onCRUD={this.handleChanges} docRef={assign.refId} accessMethod="adminMed" data={assign.data}/>)
+        return (<ShowMedic key={assign.refId} onCRUD={this.handleChanges} refId={assign.refId} accessMethod="adminMed" data={assign.data}/>)
       });}
 
     // RETURN THE COMPONENT
