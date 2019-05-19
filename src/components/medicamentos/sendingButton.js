@@ -15,7 +15,6 @@ import {Button,InputGroup,FormControl} from 'react-bootstrap';
         method:"",
         button:"",
         color:"",
-        refId:"",
         cantidad:""
       };
     }
@@ -43,7 +42,8 @@ import {Button,InputGroup,FormControl} from 'react-bootstrap';
 
     async updateMedicament() {
       let sendObj = {};
-      sendObj.refId = this.props.refId
+      sendObj.putInfo = this.state.putInfo;
+      sendObj.refId = this.props.refId;
       sendObj.cantidad = this.state.cantidad;
       const response = await fetch(this.state.url, { method:this.state.method, 
                   redirect: 'follow',

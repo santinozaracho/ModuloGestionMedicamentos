@@ -8,27 +8,33 @@ class ViewAssigns extends Component {
     super(props);
     this.unsubscribe = null;
     this.state = {
+      url:'https://us-central1-modulogestionmedicamentos.cloudfunctions.net/app/asignaciones',
       asignaciones: []
     };
 
   }
-
- 
-
-
+  
   componentDidMount() {
-    // this.unsubscribe = this.ref.onSnapshot(this.onUpdateCollection);
-    fetch('https://us-central1-modulogestionmedicamentos.cloudfunctions.net/app/asignaciones')
-    .then((response) => {
-      return response.json();})
-    .then((myJson) => {
-      let asignaciones = [];
-      myJson.map( (item) => {
-        asignaciones.push(item); 
-      });
-      this.setState({asignaciones})
-    });
+    this.getDataFromAPI()
   }
+
+  getDataFromAPI = async () => {
+    await fetch(this.state.url,{headers: {
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': 0}})
+        .then((response) => {
+          return response.json()
+        })
+        .then((asignaciones) => {
+          this.setState({asignaciones})
+        })
+  }
+  
+  handleChanges(){
+    this.getDataFromAPI()
+  }
+
 
   render() {
     console.log("Procesando");
@@ -36,7 +42,7 @@ class ViewAssigns extends Component {
     
     const asignaciones = this.state.asignaciones.map((assign) => {
       return (
-        <ShowAssign key={assign.refId} refId={assign.refId} accessMethod="adminMed" data={assign.data}/>
+        <ShowAssign key={assign.refId} onCRUD={this.handleChanges} refId={assign.refId} accessMethod="adminAss" data={assign.data}/>
       )
     });
 

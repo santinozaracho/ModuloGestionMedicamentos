@@ -17,9 +17,8 @@ class ShowAssign extends Component{
 
     render() {
 
-        const partida = this.props.data.partList.map( (medicamento) => {
-                return(<tr key={medicamento.refId}><td> {medicamento.codigo}</td>
-                            <td>{medicamento.cantidad}</td></tr>)
+        const partida = this.props.data.partList.map( (medicamento) => {            
+            return(<tr key={medicamento.refId}><td>{medicamento.codigo}</td><td>{medicamento.cantidad}</td></tr>)
         })
         
         // footer = <Button variant="danger">Borrar</Button>;
@@ -33,7 +32,7 @@ class ShowAssign extends Component{
                     <Badge variant="danger"><Clock date={this.props.data.partDate}/></Badge>
                     <Table striped bordered hover size="sm">
                         <thead>
-                            <tr><th>Codigo</th>
+                            <tr key="Init"><th>Codigo</th>
                             <th>Cantidad</th></tr>
                         </thead>
                         <tbody>

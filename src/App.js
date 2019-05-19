@@ -17,9 +17,11 @@ class App extends Component {
   constructor(props) {
     super();
     this.state = {
+      searchParameter:'',
       appLoaded:<Inicio></Inicio>
     }
     this.handleApps = this.handleApps.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
   }
 
 
@@ -36,13 +38,18 @@ class App extends Component {
       }
     // })
   }
+  handleSearch(stringSearched) {
+    if (stringSearched !== '') {
+      this.setState({searchParameter:stringSearched})
+    } 
+  }
 
   render() {
 
     // RETURN THE COMPONENT
     return (
       <div className="App">
-        <Navigation onChangeNavigation={this.handleApps}></Navigation>
+        <Navigation onSearch={this.handleSearch} onChangeNavigation={this.handleApps}></Navigation>
         <Container>
           {this.state.appLoaded}
         </Container>

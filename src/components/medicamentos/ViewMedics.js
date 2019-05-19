@@ -34,12 +34,16 @@ class ViewMedics extends Component {
   }
 
   render() {
-    console.log("Solicitando...");
-    console.log(this.state.medicamentos);
+    
+    
     let medicamentos = <Alert variant="info">No hay Medicamentos</Alert>
     if (this.state.medicamentos.length > 0) {
-      medicamentos = this.state.medicamentos.map( assign => {
-        return (<ShowMedic key={assign.refId} onCRUD={this.handleChanges} refId={assign.refId} accessMethod="adminMed" data={assign.data}/>)
+      medicamentos = this.state.medicamentos.map( medicamento => {
+        if (medicamento.data.nombre.match(this.props.searchParameter)) {
+          console.log(this.props.searchParameter);
+          
+          return (<ShowMedic key={medicamento.refId} onCRUD={this.handleChanges} refId={medicamento.refId} accessMethod="adminMed" data={medicamento.data}/>)
+        }
       });}
 
     // RETURN THE COMPONENT

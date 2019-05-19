@@ -1,21 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import App from './App';
-import ViewMedics from './components/medicamentos/ViewMedics'
 import * as serviceWorker from './serviceWorker';
 // import Edit from './components/Edit';
 // import Create from './components/Create';
 // import Show from './components/Show';
 
 ReactDOM.render(
-  <Router>
-      <div>
-        <Route exact path='/' component={App} />
-      </div>
-  </Router>,
+      <App/>,
   document.getElementById('root')
 );
 
