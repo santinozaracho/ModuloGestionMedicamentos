@@ -11,7 +11,7 @@ import {Button,InputGroup,FormControl} from 'react-bootstrap';
         loadingText:"Espere...",
         isLoading: false,
         isCommon:true,
-        url:'https://us-central1-modulogestionmedicamentos.cloudfunctions.net/app/medicamentos',
+        url:'',
         method:"",
         button:"",
         color:"",
@@ -21,10 +21,10 @@ import {Button,InputGroup,FormControl} from 'react-bootstrap';
     componentDidMount() {
       switch (this.props.accessMethod) {
         case "loadMed":
-        this.setState({ isCommon:true,method:"PUT",putInfo:"Load",button: "Actualizar",color:"outline-success" });
+        this.setState({ isCommon:true,method:"PUT",putInfo:"Load",button: "Actualizar",color:"outline-success",url:'https://us-central1-modulogestionmedicamentos.cloudfunctions.net/app/medicamentos/load'});
             break;
         case "controlMed":
-        this.setState({ isCommon:true,method:"PUT",putInfo:"Control",button: "Corregir",color:"outline-warning" });
+        this.setState({ isCommon:true,method:"PUT",putInfo:"Control",button: "Corregir",color:"outline-warning",url:'https://us-central1-modulogestionmedicamentos.cloudfunctions.net/app/medicamentos/control' });
             break;
         case "adminMed":
         this.setState({ isCommon:false,method:"DELETE",button: "Borrar",color:"outline-danger" });
@@ -42,10 +42,8 @@ import {Button,InputGroup,FormControl} from 'react-bootstrap';
 
     async updateMedicament() {
       let sendObj = {};
-      sendObj.putInfo = this.state.putInfo;
-      sendObj.refId = this.props.refId;
       sendObj.cantidad = this.state.cantidad;
-      const response = await fetch(this.state.url, { method:this.state.method, 
+      const response = await fetch(this.state.url+'/'+this.props.refId, { method:this.state.method, 
                   redirect: 'follow',
                   headers: {
                             'Accept': 'application/json',

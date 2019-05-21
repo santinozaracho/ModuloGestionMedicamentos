@@ -121,27 +121,22 @@ let createMedicamento = (req, res) => {
 	
 	};
 //Selector de Puts de Medicinas para realizar controles o actualizaciones
-let putMedicamento = (req,res,next)=>{
-	if (req.body.refId) {
-		if (req.body.putInfo === 'Load') {
+let putLoadMedicamento = (req,res,next)=>{
 			console.log("Se ejecuta un Carga");
-			loadMedic(req.body,req.body.refId)
+			loadMedic(req.body,req.params.refId)
 			.then( (resp) => {res.status(200).send(resp.ok)} )
 			.catch( (error) => {res.status(401).send(error.error)} );
-	   	}else{
+};
+
+let putControlMedicamento = (req,res,next)=>{
 			console.log("Se ejecuta un Control");
-			controlMedic(req.body,req.body.refId)
+			controlMedic(req.body,req.params.refId)
 			.then( (resp) => {res.status(200).send(resp.ok)} )
 			.catch( (error) => {res.status(401).send(error.error)} );
-	   }
-	}else{res.status(403).send("Falta Referencia")}
-	
 	};
 //Funcion para la eliminacion de los medicamentos
 let delMedicamento = (req,res,next)=>{
-	let delMedic = req.body;
-	if (delMedic.refId) {
-		medicamentosRef.doc(delMedic.refId)
+		medicamentosRef.doc(req.params.refId)
 		.delete()
 		.then((refId) => {
 			res.status(200).send("Deleted!")
@@ -149,15 +144,10 @@ let delMedicamento = (req,res,next)=>{
 		.catch((err) => {
 			res.status(401).send(err)
 			console.log('Error getting documents', err);});
-	}else{
-		res.status(401).send("No referencia.")
-	}	
 };
 //Funcion para la eliminacion de los medicamentos
 let delAsignaciones = (req,res,next)=>{
-	let delAsig = req.body;
-	if (delAsig.refId) {
-		asignacionesRef.doc(delAsig.refId)
+		asignacionesRef.doc(req.params.refId)
 		.delete()
 		.then((refId) => {
 			res.status(200).send("Deleted!")
@@ -165,9 +155,6 @@ let delAsignaciones = (req,res,next)=>{
 		.catch((err) => {
 			res.status(401).send(err)
 			console.log('Error getting documents', err);});
-	}else{
-		res.status(401).send("No referencia.")
-	}	
 };
 
 
@@ -293,4 +280,4 @@ let test = function (req, res, next) {
   next()
 };
 
-module.exports = {getAsignaciones,getMedicamentos,setAsignation,test,createMedicamento,delMedicamento,putMedicamento,delAsignaciones,getAsignacion,getMedicamento}
+module.exports = {getAsignaciones,getMedicamentos,setAsignation,test,createMedicamento,delMedicamento,putControlMedicamento,putLoadMedicamento,delAsignaciones,getAsignacion,getMedicamento}
