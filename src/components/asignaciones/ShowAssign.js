@@ -1,14 +1,34 @@
 import React, {Component} from 'react';
 import {Card,Badge,Table} from 'react-bootstrap';
-import SendingButton from '../medicamentos/SendingButton';
+import SendingButton from '../medicamentos/sendingButton';
 import Clock from '../Clock'
 
 class ShowAssign extends Component{
     constructor(props) {
-      super(props);
-      this.state = {}
-      this.handleReenv = this.handleReenv.bind(this)
+        super(props);
+        this.state = {
+            medico:{nombre:'nodata',apellido:'nodata'},
+            urlMedico:'http://localhost:8080/api/medico/'
+        }
+        this.handleReenv = this.handleReenv.bind(this);
     }
+    componentDidMount(){
+        this.getNameMedicAPI();
+    }
+
+    getNameMedicAPI = async () => { 
+        await fetch(this.state.urlMedico+this.props.data.medicId,{method: 'GET'})
+            .then((response) => {
+                console.log(response.json());
+                
+              return response.json()
+            })
+            .then((medico) => {
+                console.log(medico);
+                
+              this.setState({medico})
+            })
+      }
 
     handleReenv(e){
         this.props.onCRUD(e)
@@ -25,7 +45,7 @@ class ShowAssign extends Component{
         return(
             <Card className="text-center">
                 <Card.Header>
-                    <Card.Title className="text-uppercase">{this.props.data.medicId}</Card.Title>
+                    <Card.Title className="text-uppercase">{this.state.medico.apellido+','+this.state.medico.nombre}</Card.Title>
                 </Card.Header>
                 
                 <Card.Body>

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { Card,Badge} from 'react-bootstrap';
-import SendingButton from './SendingButton.js';
+import SendingButton from './sendingButton.js';
 import Clock from '../Clock'
 
 
