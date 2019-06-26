@@ -1,63 +1,29 @@
 import React, { Component } from 'react';
-import {Container,Row,Col,CardColumns} from 'react-bootstrap';
+import {Container,Row,Col} from 'react-bootstrap';
 import CreateMedic from './CreateMedic';
-import ShowMedic from './ShowMedic';
-
+import ViewMedicines from './ViewMedicines';
 class ViewLoads extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      url:'https://us-central1-modulogestionmedicamentos.cloudfunctions.net/app/medicamentos',
-      medicamentos: []
-    };
-    this.handleChanges=this.handleChanges.bind(this)
+    this.state = {update:0};
   }
 
-  componentDidMount() {
-    this.getDataFromAPI()
-  }
-
-  getDataFromAPI = async () => {
-    await fetch(this.state.url,{headers: {
-      'Cache-Control': 'no-cache, no-store, must-revalidate',
-      'Pragma': 'no-cache',
-      'Expires': 0}})
-        .then((response) => {
-          return response.json()
-        })
-        .then((medicamentos) => {
-          this.setState({medicamentos})
-        })
-  }
-  
-  handleChanges(){
-    this.getDataFromAPI()
-  }
+  handleChanges = () => this.setState({update:this.state.update+1})
 
   render() {
-    console.log("Procesando");
-    console.log(this.state.medicamentos);
-    const medicamentos = this.state.medicamentos.map((medic) => {
-      return (
-        <ShowMedic key={medic.refId} onCRUD={this.handleChanges} refId={medic.refId} accessMethod="loadMed" data={medic.data}/>
-      )
-    });
-
+    let {update} = this.state;
     // RETURN THE COMPONENT
     return (
         <Container className="mt-4">
           <Row>
-            <Col lg={4}>
+            <Col lg={3}>
               <CreateMedic onCRUD={this.handleChanges}/>
             </Col>
-            <Col lg={8}>
-              <CardColumns>     
-                {medicamentos}
-              </CardColumns>
+            <Col lg={9}>
+              <ViewMedicines update={update} access='loadMed'/>
             </Col>     
           </Row>
          </Container>
-
     );
   }
 }

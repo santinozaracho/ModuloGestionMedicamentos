@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Container,Row,CardColumns} from 'react-bootstrap';
+import {Container,Row,CardDeck,Spinner} from 'reactstrap';
 
 import ShowAssign from './ShowAssign';
 
@@ -8,53 +8,54 @@ class ViewAssigns extends Component {
     super(props);
     this.unsubscribe = null;
     this.state = {
-      url:'https://us-central1-modulogestionmedicamentos.cloudfunctions.net/app/asignaciones',
-      asignaciones: []
+      urlAssigns:'https://us-central1-modulogestionmedicamentos.cloudfunctions.net/app/asignaciones',
+      urlMedicines:'https://us-central1-modulogestionmedicamentos.cloudfunctions.net/app/medicamentos',
+      asignaciones: [],
+      medicines:[]
     };
 
   }
   
   componentDidMount() {
-    this.getDataFromAPI()
+    this.getAssigns();
+    this.getMedicines();
   }
 
-  getDataFromAPI = async () => {
-    await fetch(this.state.url,{headers: {
-      'Cache-Control': 'no-cache, no-store, must-revalidate',
-      'Pragma': 'no-cache',
-      'Expires': 0}})
-        .then((response) => {
-          return response.json()
-        })
-        .then((asignaciones) => {
-          this.setState({asignaciones})
-        })
+  getAssigns = async () => {
+    await fetch(this.state.urlAssigns)
+        .then((response) => response.json())
+        .then((asignaciones) => this.setState({asignaciones}))
+        .catch(err=> console.log(err))
   }
+
+  getMedicines = async () => {
+    await fetch(this.state.urlMedicines)
+        .then((response) => response.json())
+        .then((medicines) => this.setState({medicines}))
+        .catch(err=>console.log(err))  
+  }
+
   
-  handleChanges(){
-    this.getDataFromAPI()
-  }
+  handleChanges = () => this.getAssigns()
 
 
   render() {
-    console.log("Procesando");
-    console.log(this.state.asignaciones);
-    
-    const asignaciones = this.state.asignaciones.map((assign) => {
-      return (
-        <ShowAssign key={assign.refId} onCRUD={this.handleChanges} refId={assign.refId} accessMethod="adminAss" data={assign.data}/>
-      )
-    });
-
+    let {asignaciones,medicines} = this.state;
+    let printAssigns = asignaciones.length > 0 && asignaciones.map( assign => 
+      <ShowAssign key={assign.id}
+      medicines={medicines}
+      onCRUD={this.handleChanges} 
+      accessMethod={this.props.access || 'adminAss'} 
+      assign={assign}/>)
+  
     // RETURN THE COMPONENT
     return (
-        <Container className="mt-4">
-          <Row> 
-            <CardColumns className="w-75 mx-auto">
-              {asignaciones}
-            </CardColumns>     
-          </Row>
-         </Container>
+      <Container className="mt-4">
+        <Row>{!asignaciones.length && <Spinner className='mx-auto mt-5' style={{ width: '4rem', height: '4rem' }} type="grow"/>}</Row>
+        <Row>
+          <CardDeck className='mx-auto'>{printAssigns}</CardDeck>              
+        </Row>
+     </Container>
 
     );
   }

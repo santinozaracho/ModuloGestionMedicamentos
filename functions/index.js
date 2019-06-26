@@ -7,6 +7,8 @@ const app = express();
 const router = express.Router();
 const cors = require('cors');
 
+//Port 
+app.set('port', process.env.PORT || 4000)
 
 //Middlewares
 router.use(function timeLog (req, res, next) {
@@ -24,11 +26,11 @@ app.get('/', impCtrls.test);
 
 //Enrutamiento Medicamentos..
 app.get('/medicamentos', impCtrls.getMedicamentos);
-app.get('/medicamentos/:refId', impCtrls.getMedicamento);
+app.get('/medicamentos/:medicineId', impCtrls.getMedicamento);
 app.post('/medicamentos', impCtrls.createMedicamento);
-app.put('/medicamentos/control/:refId', impCtrls.putControlMedicamento);
-app.put('/medicamentos/load/:refId', impCtrls.putLoadMedicamento);
-app.delete('/medicamentos/:refId', impCtrls.delMedicamento);
+app.put('/medicamentos/control/:medicineId', impCtrls.putControlMedicamento);
+app.put('/medicamentos/load/:medicineId', impCtrls.putLoadMedicamento);
+app.delete('/medicamentos/:medicineId', impCtrls.delMedicamento);
 
 //Enrutamiento Controles y Cargas
 // app.get('/controles', impCtrls.getMedicos);
@@ -36,9 +38,9 @@ app.delete('/medicamentos/:refId', impCtrls.delMedicamento);
 
 //Enrutamiento Asignaciones
 app.get('/asignaciones', impCtrls.getAsignaciones);
-app.get('/asignaciones/:refId', impCtrls.getAsignacion);
+app.get('/asignaciones/:assignId', impCtrls.getAsignacion);
 app.post('/asignaciones', impCtrls.setAsignation);
-app.delete('/asignaciones/:refId', impCtrls.delAsignaciones);
+app.delete('/asignaciones/:assignId', impCtrls.delAsignaciones);
 
 
 app.listen(app.get('port'), () => {console.log("La API se Incio...", app.get('port'))});

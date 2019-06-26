@@ -8,13 +8,7 @@ import * as serviceWorker from './serviceWorker';
 // import Create from './components/Create';
 // import Show from './components/Show';
 
-ReactDOM.render(
-      <App/>,
-  document.getElementById('root')
-);
-
-
-
+ReactDOM.render(<App/>,document.getElementById('root'));
 
 // <Route exact path='/components/medicamentos/ViewMedics' component={ViewMedics} />
 // <Route path='/edit/:id' component={Edit} />

@@ -7,52 +7,49 @@ import './App.css';
 // subcomponents
 import Inicio from './components/inicio/Inicio'
 import Navigation from './components/menu/Navigation';
-import ViewMedics from './components/medicamentos/ViewMedics';
+import ViewMedicines from './components/medicamentos/ViewMedicines';
 import ViewLoads from './components/medicamentos/ViewLoads';
 import ViewControls from './components/medicamentos/ViewControls';
 import ViewAssigns from './components/asignaciones/ViewAssigns';
-import {Container} from 'react-bootstrap'
 
 class App extends Component {
   constructor(props) {
     super();
     this.state = {
       searchParameter:'',
+      appActive:'HOME',
       appLoaded:<Inicio></Inicio>
     }
-    this.handleApps = this.handleApps.bind(this);
-    this.handleSearch = this.handleSearch.bind(this);
   }
 
 
-  handleApps(appSelected) {
-    console.log(appSelected);
+  handleApps = appActive => {
+
     // navegacion.map( (item) => {
-      switch (appSelected) {
-        case 'HOME': this.setState({appLoaded:<Inicio></Inicio>});break;
-        case 'MEDIC': this.setState({appLoaded:<ViewMedics></ViewMedics>});break;
-        case 'CONTROLES': this.setState({appLoaded:<ViewControls></ViewControls>});break;
-        case 'CARGAS': this.setState({appLoaded:<ViewLoads></ViewLoads>});break;
-        case 'ASIGN': this.setState({appLoaded:<ViewAssigns></ViewAssigns>});break;
-        default: this.setState({appLoaded:<Inicio></Inicio>})
+      switch (appActive) {
+        case 'HOME': this.setState({appActive,appLoaded:<Inicio></Inicio>});break;
+        case 'MEDIC': this.setState({appActive,appLoaded:<ViewMedicines></ViewMedicines>});break;
+        case 'CONTROLES': this.setState({appActive,appLoaded:<ViewControls></ViewControls>});break;
+        case 'CARGAS': this.setState({appActive,appLoaded:<ViewLoads></ViewLoads>});break;
+        case 'ASIGN': this.setState({appActive,appLoaded:<ViewAssigns></ViewAssigns>});break;
+        default: this.setState({appActive,appLoaded:<Inicio></Inicio>})
       }
     // })
   }
-  handleSearch(stringSearched) {
-    if (stringSearched !== '') {
-      this.setState({searchParameter:stringSearched})
-    } 
-  }
+
+
+  handleSearch = searchParameter => searchParameter !== '' && this.setState({searchParameter})
+  
 
   render() {
+    let {appActive,appLoaded} = this.state;
 
-    // RETURN THE COMPONENT
     return (
       <div className="App">
-        <Navigation onSearch={this.handleSearch} onChangeNavigation={this.handleApps}></Navigation>
-        <Container>
-          {this.state.appLoaded}
-        </Container>
+        <Navigation appActive={appActive} handleSearch={this.handleSearch} handleApps={this.handleApps}></Navigation>
+        <div>
+          {appLoaded}
+        </div>
       </div>
     );
   }

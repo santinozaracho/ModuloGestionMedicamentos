@@ -26,8 +26,13 @@ var getMedicamentos = (req, res, next) => {
     medicamentosRef.get().then( (querySnapshot) => {
         querySnapshot.forEach( (doc) => {
             datos.push({
-                refId: doc.id,
-                data: doc.data()
+                id: doc.id,
+				name: doc.data().nombre,
+				drug: {name: doc.data().drogas},
+				laboratory: doc.data().laboratorio,
+				presentation: doc.data().presentacioncant +' '+doc.data().presentaciontipo,
+				stock: doc.data().cantidad,
+				loadDate: new Date(doc.data().loadDate._seconds*1000).toLocaleString()
 				});
             });
 		res.json(datos);})
@@ -37,22 +42,39 @@ var getMedicamentos = (req, res, next) => {
       });
 };
 var getMedicamento = (req, res, next) => { 
-    medicamentosRef.doc(req.params.refId).get().then( (doc) => {
-				let datos = {};
-                datos.refId = doc.id;
-				datos.data = doc.data();
-				res.json(datos);})
+	medicamentosRef.doc(req.params.medicineId).get()
+		.then( (doc) => {	
+				if(doc.data()){
+					let datos = {};
+					datos.id = doc.id
+					datos.name = doc.data().nombre
+					datos.drug = {name: doc.data().drogas}
+					datos.laboratory = doc.data().laboratorio
+					datos.presentation = doc.data().presentacioncant +' '+doc.data().presentaciontipo
+					datos.stock = doc.data().cantidad
+					datos.loadDate = new Date(doc.data().loadDate._seconds*1000).toLocaleString()
+					res.json(datos);
+				}else{
+					res.status(400).send({error:'Id Not Found'});
+				}
+			})
 		.catch((err) => {
 			console.log('Error getting documents', err);
 			res.status(403).send(err); 
       });
 };
 var getAsignacion = (req, res, next) => { 
-    asignacionesRef.doc(req.params.refId).get().then( (doc) => {
-				let datos = {};
-                datos.refId = doc.id;
-				datos.data = doc.data();
-				res.json(datos);})
+    asignacionesRef.doc(req.params.assignId).get().then( (doc) => {
+		if(doc.data()){
+			let datos = {};
+			datos.id = doc.id;
+			datos.medicId= doc.data().medicId;
+			datos.date = doc.data().date;
+			datos.medicinePrescriptions = doc.data().medicinePrescriptions;
+			res.status(200).json(datos);
+		}else{
+			res.status(400).send({error:'Id not Found'})
+		}})
 		.catch((err) => {
 			console.log('Error getting documents', err);
 			res.status(403).send(err); 
@@ -63,10 +85,12 @@ var getAsignaciones = (req, res, next) => {
 	let datos = [];
     asignacionesRef.get().then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-            datos.push({
-                refId: doc.id,
-                data: doc.data()
-				});
+            datos.push(
+						{id:doc.id,
+						medicId:doc.data().medicId,
+						date:doc.data().date,
+						medicinePrescriptions:doc.data().medicinePrescriptions}
+					);
 			
             });
 		res.json(datos);  
@@ -78,20 +102,22 @@ var getAsignaciones = (req, res, next) => {
 
 //Funcion de Respuesta que controla las partidas entrantes o Asignaciones
 var setAsignation = async (req, res, next) => {
+	let {medicId,date,medicinePrescriptions} =req.body
 	var newAssign = {};
-	newAssign.medicId = req.body.medicId;
-	newAssign.partList = req.body.partList;
+	newAssign.medicId = medicId;
+	newAssign.date = date
+	newAssign.medicinePrescriptions = medicinePrescriptions;
 	//Validating Info..
-	if ( newAssign.medicId && newAssign.partList.length > 0 ) {
+	if ( newAssign.medicId && newAssign.medicinePrescriptions.length > 0 ) {
 		//Descontando Stock y luego...
-		await stockListDisscount(newAssign.partList)
+		await stockListDisscount(newAssign.medicinePrescriptions)
 		.then( async (resp) => {
 			//Creamos la Partida y Enviamos la refId
 			console.log(resp);
 			console.log("Stock descontado totalmente inciando creacion..");
 			
 			await createAssign(newAssign)
-			.then( (respOk) => {res.status(201).send(respOk)} )
+			.then( (respOk) => {res.status(201).send({id:respOk})} )
 			.catch( (error) => {res.status(400).send("Error:"+error)} );})
 		.catch( (error) => {
 			console.log("Aca:"+error);
@@ -123,20 +149,20 @@ let createMedicamento = (req, res) => {
 //Selector de Puts de Medicinas para realizar controles o actualizaciones
 let putLoadMedicamento = (req,res,next)=>{
 			console.log("Se ejecuta un Carga");
-			loadMedic(req.body,req.params.refId)
+			loadMedic(req.body,req.params.medicineId)
 			.then( (resp) => {res.status(200).send(resp.ok)} )
 			.catch( (error) => {res.status(401).send(error.error)} );
 };
 
 let putControlMedicamento = (req,res,next)=>{
 			console.log("Se ejecuta un Control");
-			controlMedic(req.body,req.params.refId)
+			controlMedic(req.body,req.params.medicineId)
 			.then( (resp) => {res.status(200).send(resp.ok)} )
 			.catch( (error) => {res.status(401).send(error.error)} );
 	};
 //Funcion para la eliminacion de los medicamentos
 let delMedicamento = (req,res,next)=>{
-		medicamentosRef.doc(req.params.refId)
+		medicamentosRef.doc(req.params.medicineId)
 		.delete()
 		.then((refId) => {
 			res.status(200).send("Deleted!")
@@ -147,7 +173,7 @@ let delMedicamento = (req,res,next)=>{
 };
 //Funcion para la eliminacion de los medicamentos
 let delAsignaciones = (req,res,next)=>{
-		asignacionesRef.doc(req.params.refId)
+		asignacionesRef.doc(req.params.assignId)
 		.delete()
 		.then((refId) => {
 			res.status(200).send("Deleted!")
@@ -163,19 +189,19 @@ let delAsignaciones = (req,res,next)=>{
 let preValidaPartidas = (array) => {
 		const status = true;
 		array.forEach( item => {
-			if (!item.refId && item.cantidad < 1) {
+			if (!item.medicineId && item.quantity < 1) {
 				return false
 			}});
 		return status	
 	};
 //Funcion que Verifica el Stock y Descuenta en la BD
 let stockDisscount = async item =>{
-	let medicItemRef = medicamentosRef.doc(item.refId);	
+	let medicItemRef = medicamentosRef.doc(item.medicineId);	
 	return await medicItemRef.get()
 		.then(async doc => {	
-			if ( doc.exists && doc.data().cantidad >= parseInt(item.cantidad) )  {
+			if ( doc.exists && doc.data().cantidad >= parseInt(item.quantity) )  {
 				//Preparando el Decremento de Stock
-				const decreaseBy = FieldValue.increment(-parseInt(item.cantidad));
+				const decreaseBy = FieldValue.increment(-parseInt(item.quantity));
 				//Busqueda y Actaulizacion
 				await medicItemRef
 				.update({"cantidad":decreaseBy,"updatedDate":FieldValue.serverTimestamp()})
@@ -187,7 +213,7 @@ let stockDisscount = async item =>{
 					return Promise.reject(error) });		
 			}else{ 
 				console.log("Se da Cuenta del error");
-				return Promise.reject("No se encontro el doc con refId o supera el Stock.");
+				return Promise.reject("No se encontro el doc con medicineId o supera el Stock.");
 			}})
 		.catch( error => {
 			console.log('Error getting document', error);

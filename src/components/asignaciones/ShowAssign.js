@@ -1,66 +1,62 @@
 import React, {Component} from 'react';
-import {Card,Badge,Table} from 'react-bootstrap';
-import SendingButton from '../medicamentos/sendingButton';
-import Clock from '../Clock'
+import {Card,CardBody,CardHeader,CardFooter,CardTitle,Badge,Table} from 'reactstrap';
+import SendingButton from '../medicamentos/SendingButton.js';
 
 class ShowAssign extends Component{
     constructor(props) {
         super(props);
         this.state = {
+            loaded:false,
             medico:{nombre:'nodata',apellido:'nodata'},
-            urlMedico:'http://localhost:8080/api/medico/'
+            urlMedico:'http://medicosdacs.ddns.net:8080/api/medico/'
         }
-        this.handleReenv = this.handleReenv.bind(this);
     }
     componentDidMount(){
         this.getNameMedicAPI();
     }
 
     getNameMedicAPI = async () => { 
-        await fetch(this.state.urlMedico+this.props.data.medicId,{method: 'GET'})
-            .then((response) => {
-                console.log(response.json());
-                
-              return response.json()
-            })
-            .then((medico) => {
-                console.log(medico);
-                
-              this.setState({medico})
-            })
+        await fetch(this.state.urlMedico+this.props.assign.medicId)
+            .then( response => response.json())
+            .then( medico => this.setState({medico}))
+            .catch( err => this.setState({loaded:false}))
       }
 
-    handleReenv(e){
-        this.props.onCRUD(e)
+    handleReenv = (e) =>{this.props.onCRUD(e)}
+
+    
+    getMedName = id => {
+        let{medicines} = this.props
+        let medicine=medicines.find( medicine => medicine.id===id )
+        return medicine? medicine.name:'NO-DATA'
     }
+    
+    getTableMedicines = medicines => medicines.map( medicamento => <tr key={'C-A-T'+medicamento.medicineId}><td>{this.getMedName(medicamento.medicineId)}</td><td>{medicamento.quantity}</td></tr>)
+    
 
 
     render() {
-
-        const partida = this.props.data.partList.map( (medicamento) => {            
-            return(<tr key={medicamento.refId}><td>{medicamento.codigo}</td><td>{medicamento.cantidad}</td></tr>)
-        })
-        
-        // footer = <Button variant="danger">Borrar</Button>;
+        let {assign} = this.props;
+        let {loaded,medico} = this.state
+        let partida = this.getTableMedicines(assign.medicinePrescriptions);
         return(
-            <Card className="text-center">
-                <Card.Header>
-                    <Card.Title className="text-uppercase">{this.state.medico.apellido+','+this.state.medico.nombre}</Card.Title>
-                </Card.Header>
+            <Card outline color='secondary' className="text-center card-size">
+                <CardHeader>
+                    <CardTitle className="text-uppercase">{loaded ? medico.apellido+','+medico.nombre : assign.medicId}</CardTitle>
+                </CardHeader>
                 
-                <Card.Body>
-                    <Badge variant="danger"><Clock date={this.props.data.partDate}/></Badge>
-                    <Table striped bordered hover size="sm">
+                <CardBody>
+                    <Badge color="danger">{assign.date}</Badge>
+                    <Table>
                         <thead>
-                            <tr key="Init"><th>Codigo</th>
-                            <th>Cantidad</th></tr>
+                            <tr key="Init"><th>Nombre</th><th>Cantidad</th></tr>
                         </thead>
                         <tbody>
                             {partida}
                         </tbody>      
                     </Table>          
-                </Card.Body>
-                <Card.Footer><SendingButton refId={this.props.refId} onListenEv={this.handleReenv} accessMethod={"adminAss"}></SendingButton></Card.Footer>
+                </CardBody>
+                <CardFooter><SendingButton id={assign.id} onListenEv={this.handleReenv} accessMethod={"adminAss"}></SendingButton></CardFooter>
             </Card>
           )
         }

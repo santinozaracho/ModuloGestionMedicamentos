@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import logo from '../../logo.svg';
 import { navegacion } from './navegacion.json';
-import { Button,Navbar,Nav,Form,FormControl } from 'react-bootstrap';
+import { Button,Navbar,Nav,Form,Input,NavItem,NavbarBrand,NavbarToggler,Collapse } from 'reactstrap';
 
 
 
@@ -11,51 +11,46 @@ class Navigation extends Component{
     super(props);
     this.state = {
       navegacion,
-      active: "HOME",
-      searchText:''
+      searchText:'',
+      collapsed:true
     }
-    this.loadApp = this.loadApp.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleInputChange = this.handleInputChange.bind(this);
   }
 
-  loadApp(menuSel) {
-    this.setState({active : menuSel});
-    this.props.onChangeNavigation(menuSel)
-  }
-  handleSubmit(e) {
+  handleApp = newMenu => newMenu !== this.props.appActive && this.props.handleApps(newMenu)
+
+  handleSubmit = e => {
     e.preventDefault();
     this.props.onSearch(this.state.searchText)
   }
-
-  handleInputChange(e) {
-    const { value } = e.target;
-    this.setState({
-        searchText:value
-    });
-}
+  toggleNav = e => this.setState({collapsed:!this.state.collapsed})
+  handlebabe = d=>console.log(d);
+  
+  handleInputChange = e => this.setState({searchText:e.target.value});
 
   render() {
-    const barra = this.state.navegacion.map( (item) => {
-      return(
-        <Nav.Link key={item.codigo} active={item.codigo === this.state.active ? true: false} eventKey={item.codigo}>{item.nombre}</Nav.Link>
-      
-
-    )});
+    let {navegacion} = this.state;
+    let {appActive} = this.props;
+    let barra = navegacion.map( item => 
+    <NavItem key={item.codigo}>
+      <Button active={item.codigo === appActive && true} 
+      size='sm' onClick={e => this.handleApp(item.codigo)}
+      className='mx-1' outline color='success'
+      >{item.nombre}</Button>
+    </NavItem>);
+        
     return(
-      <Navbar collapseOnSelect expand="lg" bg="light" variant="light" sticky="top">
-        <Navbar.Brand href=""><img src={logo} className="App-logo" alt="logo" height="50" width="50"/></Navbar.Brand>
-        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-         <Navbar.Collapse id="responsive-navbar-nav">
+      <Navbar expand="md" light color="light" sticky="top">
+        <NavbarBrand href="/"><img src={logo} className="App-logo" alt="logo" height="50" width="50"/></NavbarBrand>
+        <NavbarToggler onClick={this.toggleNav}/>
+         <Collapse isOpen={!this.state.collapsed} navbar>
           <Form onSubmit={this.handleSubmit} inline>
-            <FormControl name="searchText" type="text" placeholder="Buscar" onChange={this.handleInputChange} className="mr-sm-2" />
-            <Button type="submit" variant="outline-success">Buscar</Button>
+            <Input name="searchText" type="text" bsSize='sm'placeholder="Buscar" onChange={this.handleInputChange} className="inSearch" />
+            <Button type="submit" size='sm' className='ml-1' outline color="success">Buscar</Button>
           </Form>
-          <Nav className="mr-auto" activeKey="HOME"
-          onSelect={selectedKey => this.loadApp(selectedKey)}>
-          {barra}
+          <Nav className="mx-auto" navbar>
+            {barra}
           </Nav>
-        </Navbar.Collapse>
+        </Collapse>
       </Navbar>
     )
   }

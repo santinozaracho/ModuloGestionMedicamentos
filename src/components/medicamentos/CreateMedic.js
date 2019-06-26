@@ -1,133 +1,152 @@
 import React, { Component } from 'react';
-import {Card,Row,Button,Col,Form} from 'react-bootstrap';
+import {Card,CardBody,CardFooter,CardHeader,Row,Button,Col,Form,Input,FormGroup,FormFeedback,Label,Spinner,Alert} from 'reactstrap';
 
 
 class CreateMedic extends Component {
     constructor() {
         super();
         this.state = {
-            nombre: '',
-            cantidad: '',
-            codigo: '',
-            drogas: '',
-            presentaciontipo:'Comprimidos',
-            presentacioncant:'',
-          validated:false};
-        this.handleInputChange = this.handleInputChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-
+          nombre: '',
+          cantidad: '',
+          codigo: '',
+          laboratorio:'',
+          drogas: '',
+          presentaciontipo:'Comprimidos',
+          presentacioncant:'',
+          loading:false
+        };
     }
 
-    blankState(yes) {
+    blankState = () => {
+      this.setState({ 
+        nombre: '',
+        cantidad: '',
+        codigo: '',
+        drogas: '',
+        laboratorio:'',
+        presentaciontipo:'Comprimidos',
+        presentacioncant:'',
+        loading: false});
     }
 
-    sendMedicamento(sendObj) {
-      return new Promise( (resolve,reject) => {
-        var url = 'https://us-central1-modulogestionmedicamentos.cloudfunctions.net/app/medicamentos';
-        fetch(url, { method: 'POST', 
+    sendMedicamento = async () => {
+        let url = 'https://us-central1-modulogestionmedicamentos.cloudfunctions.net/app/medicamentos';
+        await fetch(url, { method: 'POST', 
                     headers: {
                               'Accept': 'application/json',
                               'Content-Type': 'application/json'
                             },
-                      body: JSON.stringify(sendObj)})
-            .then(response => {
-              console.log("Se añadio correctamente"+response);})
-            .catch(function(err) {
-                console.info(err);});
-        setTimeout(resolve, 1000)})
+                      body: JSON.stringify(this.state)})
+            .then( response => this.handleSuccess())
+            .catch( err => <Alert>{err}</Alert> )
+    }
+
+    handleSuccess = e =>{
+      this.props.onCRUD(e);
+      this.blankState()
     }
 
 
-    handleSubmit(event) {
-      event.preventDefault();
-      const form = event.currentTarget;
-      if (form.checkValidity() === false) {
-        event.preventDefault();
-        event.stopPropagation();
-      }else{
-        // SEND DATAAAA
-        this.sendMedicamento(this.state).then(() => {
-          this.props.onCRUD(event);
-          //Okay WhiteSpaces
-          this.setState({ 
-            nombre: '',
-            cantidad: '',
-            codigo: '',
-            drogas: '',
-            presentaciontipo:'Comprimidos',
-            presentacioncant:'',
-            validated: false});
-        });
-      }
+    handleSubmit = e =>  {
+      e.preventDefault();
+      let form = e.currentTarget;
+      if (!form.checkValidity()) { 
+        e.preventDefault(); e.stopPropagation();
+      }else{ 
+        this.setState({loading:true})
+        this.sendMedicamento() }
     }
 
-    handleInputChange(e) {
-        const { value, name } = e.target;
-        console.log(value, name);
-        this.setState({
-            [name]: value
-        });
+    handleInputChange = e => {
+        let { value, name } = e.target;
+        if ((name==='cantidad' && Number(value) > 0 )|| name!=='cantidad'){this.setState({[name]: value})}
     }
 
     render() {
-      const { validated } = this.state;
+      let {nombre, codigo, laboratorio, cantidad, presentacioncant, presentaciontipo, drogas, loading } = this.state;
+      let loadingButton = <Button size={'lg'}  block outline color="secondary"><Spinner type='grow' size={'lg'} /></Button>
       return (
-        <Card className="text-center">
-          <Form noValidate validated={validated} onSubmit = { this.handleSubmit }>
-            <Card.Header><h3>Nuevo Medicamento</h3></Card.Header>
-            <Card.Body className="mx-4">
-              <Form.Group as={Row}>
-                <Form.Control required type = "text" name = "nombre" value = { this.state.nombre } 
-                onChange = {this.handleInputChange} placeholder = "Nombre Comercial" />
-               
-                <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-    
-                <Form.Control.Feedback type="invalid">Please choose a username.</Form.Control.Feedback>
-
-              </Form.Group>
-              <Form.Group as={Row}>
-                  <Form.Control required type = "text" name = "codigo" value = { this.state.codigo }
-                onChange = {this.handleInputChange} placeholder = "Codigo Interno" />
-              </Form.Group>
-              <Form.Group as={Row}>
-                  <Form.Control required type = "text" name = "drogas" value = { this.state.drogas }
-                  onChange = {this.handleInputChange} placeholder = "Drogas:" />
-
-              </Form.Group>
-              <Form.Row >
-              <Form.Label>Presentacion:</Form.Label>
-                <Form.Group as={Col} lg={8}> 
-                  <Form.Control as="select"  name = "presentaciontipo" value = { this.state.presentaciontipo }
-                  onChange = {this.handleInputChange}>
-                    <option value="Comprimidos">Comprimidos</option>
-                    <option value="Capsulas">Capsulas</option>
-                    <option value="Solucion">Solucion</option>
-                    <option value="Jarabe">Jarabe</option>
-                    <option value="Pomada">Pomada</option>
-                  </Form.Control>
-                  
-                </Form.Group> 
-                <Form.Group as={Col} lg={4}>
-                  
-                  <Form.Control type="text" required name = "presentacioncant" value = { this.state.presentacioncant }
-                  onChange = {this.handleInputChange} placeholder='un'>
-                  </Form.Control>
-                  
-                </Form.Group> 
-
-              </Form.Row>
+        <Card className="mx-auto" outline color='secondary'>
+  
+          <Form onSubmit = { this.handleSubmit }>
+            
+            <CardHeader><h3>Nuevo Medicamento</h3></CardHeader>
+            
+            <CardBody>
               
-              <Form.Group as={Row}>
-                  <Form.Control required type = "text" name = "cantidad" value = { this.state.cantidad }
-                onChange = {this.handleInputChange} placeholder = "Stock Inicial" />
-              </Form.Group> 
-            </Card.Body>
-            <Card.Footer>
-              <Form.Group>
-                <Button type="submit" variant="success">Cargar</Button>
-              </Form.Group>
-            </Card.Footer>
+              <Row>
+                <FormGroup className='mx-auto'>
+                  <Input valid={nombre}  required type = "text" name = "nombre" value = { nombre } 
+                    onChange = {this.handleInputChange} placeholder = "Nombre Comercial" />
+                    <FormFeedback>Obligatorio</FormFeedback>
+                </FormGroup>
+          
+              </Row>
+              
+              <Row>
+                <FormGroup className='mx-auto'>
+                  <Input type = "text" name = "codigo" value = { codigo }
+                    onChange = {this.handleInputChange} placeholder = "Codigo Interno" />
+                </FormGroup>
+              </Row>
+              
+              <Row>
+                <FormGroup className='mx-auto'>
+                    <Input valid={laboratorio}  required type = "text" name = "laboratorio" value = { laboratorio }
+                  onChange = {this.handleInputChange} placeholder = "Laboratorio" />
+                  <FormFeedback>Obligatorio</FormFeedback>
+                </FormGroup>
+              </Row>
+
+              <Row>
+                <FormGroup className='mx-auto'>
+                    <Input required type = "text" name = "drogas" value = { drogas }
+                    onChange = {this.handleInputChange} placeholder = "Drogas" />
+                </FormGroup>
+              </Row>
+
+              <Row>
+                <Label className='mx-4'>Presentacion:</Label>
+                <FormGroup className=''>
+                  <Row className='mx-auto'>
+                    <Col lg={8}>
+                      <Input type="select" bsSize="sm" name = "presentaciontipo" value = { presentaciontipo }
+                      onChange = {this.handleInputChange}>
+                        <option value="Comprimidos">Comprimidos</option>
+                        <option value="Capsulas">Capsulas</option>
+                        <option value="Solucion">Solucion</option>
+                        <option value="Jarabe">Jarabe</option>
+                        <option value="Pomada">Pomada</option>
+                      </Input>
+                    </Col>  
+                    <Col lg={4}> 
+                      <Input valid={presentacioncant} type="text" required bsSize='sm' name="presentacioncant" value = { presentacioncant }
+                        onChange = {this.handleInputChange} placeholder='un'/>
+                    </Col> 
+                  </Row>
+                </FormGroup>              
+              </Row>
+              <Row className='px-5'>
+                <FormGroup className='mx-auto'>
+                  <Input valid={cantidad} required type = "text" name = "cantidad" value = { cantidad }
+                  onChange = {this.handleInputChange} placeholder = "Stock Inicial" />
+                  <FormFeedback>Obligatorio</FormFeedback>
+                </FormGroup> 
+              </Row>
+            </CardBody>
+            
+            <CardFooter> 
+                <Row>
+                  <Col>
+                    <FormGroup className='mx-auto'>
+                      {!loading ? <Button size={'lg'}  block type="submit" outline color="success">Cargar</Button>:loadingButton}
+                    </FormGroup>
+                  </Col>
+                </Row>
+            </CardFooter>
+          
           </Form>
+        
         </Card>
       )
     }
