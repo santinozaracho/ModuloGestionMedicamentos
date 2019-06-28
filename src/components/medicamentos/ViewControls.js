@@ -1,5 +1,5 @@
 import React from 'react';
-import {Container,Row,} from 'react-bootstrap';
+import {Container,Row,} from 'reactstrap';
 import ViewMedicines from './ViewMedicines';
 
 class ViewControls extends React.Component {

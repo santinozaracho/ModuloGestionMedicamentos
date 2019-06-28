@@ -2,7 +2,7 @@
 var admin = require("firebase-admin");
 var FieldValue = admin.firestore.FieldValue;
 var serviceAccount = require("../serviceAccountKey.json");
-
+// var rp = require('request-promise');
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
@@ -11,12 +11,11 @@ admin.initializeApp({
 // Example de usar where y orderby
 // var biggest = citiesRef.where('population', '>', 2500000).orderBy('population').limit(2);
 //Referencias a las tablas..
-var medicamentosRef =  admin.firestore().collection('medicamentos');
-var asignacionesRef =  admin.firestore().collection('asignaciones');
-// eslint-disable-next-line no-unused-vars
-var controlesRef =  admin.firestore().collection('controles');
-// eslint-disable-next-line no-unused-vars
-var cargasRef =  admin.firestore().collection('cargas');
+let medicamentosRef =  admin.firestore().collection('medicamentos');
+let asignacionesRef =  admin.firestore().collection('asignaciones');
+let medicosRef = admin.firestore().collection('medicos');
+let controlesRef =  admin.firestore().collection('controles');
+let cargasRef =  admin.firestore().collection('cargas');
 
 //Funciones de respuesta
 
@@ -63,6 +62,23 @@ var getMedicamento = (req, res, next) => {
 			res.status(403).send(err); 
       });
 };
+
+
+var getMedicos =  (req, res, next) => { 
+	let datos = [];
+	medicosRef.get().then( querySnapshot => {
+        querySnapshot.forEach( doc => {
+            datos.push({idFirebase: doc.id,id: doc.data().idFromAPI,
+				nombre: doc.data().nombre,apellido: doc.data().apellido,
+				matricula: doc.data().matricula,fechaNacimiento: doc.data().fechaNacimiento});
+            });
+		res.status(200).json(datos);})
+		.catch((err) => {
+			console.log('Error getting documents', err);
+			res.status(403).send(err); 
+      });
+};
+
 var getAsignacion = (req, res, next) => { 
     asignacionesRef.doc(req.params.assignId).get().then( (doc) => {
 		if(doc.data()){
@@ -306,4 +322,4 @@ let test = function (req, res, next) {
   next()
 };
 
-module.exports = {getAsignaciones,getMedicamentos,setAsignation,test,createMedicamento,delMedicamento,putControlMedicamento,putLoadMedicamento,delAsignaciones,getAsignacion,getMedicamento}
+module.exports = {getAsignaciones,getMedicamentos,setAsignation,test,createMedicamento,delMedicamento,putControlMedicamento,putLoadMedicamento,delAsignaciones,getAsignacion,getMedicamento,getMedicos}

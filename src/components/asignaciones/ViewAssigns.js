@@ -10,8 +10,10 @@ class ViewAssigns extends Component {
     this.state = {
       urlAssigns:'https://us-central1-modulogestionmedicamentos.cloudfunctions.net/app/asignaciones',
       urlMedicines:'https://us-central1-modulogestionmedicamentos.cloudfunctions.net/app/medicamentos',
+      urlMedicos:'https://us-central1-modulogestionmedicamentos.cloudfunctions.net/app/medicos',
       asignaciones: [],
-      medicines:[]
+      medicines:[],
+      medicos:[]
     };
 
   }
@@ -19,20 +21,27 @@ class ViewAssigns extends Component {
   componentDidMount() {
     this.getAssigns();
     this.getMedicines();
+    this.getMedicos();
   }
 
   getAssigns = async () => {
     await fetch(this.state.urlAssigns)
-        .then((response) => response.json())
-        .then((asignaciones) => this.setState({asignaciones}))
-        .catch(err=> console.log(err))
+        .then( response => response.json())
+        .then( asignaciones => this.setState({asignaciones}))
+        .catch( err => console.log(err))
+  }
+  getMedicos = async () => {
+    await fetch(this.state.urlMedicos)
+        .then( response => response.json())
+        .then( medicos => this.setState({medicos}))
+        .catch( err => console.log(err))
   }
 
   getMedicines = async () => {
     await fetch(this.state.urlMedicines)
-        .then((response) => response.json())
-        .then((medicines) => this.setState({medicines}))
-        .catch(err=>console.log(err))  
+        .then( response => response.json())
+        .then( medicines => this.setState({medicines}))
+        .catch( err => console.log(err))  
   }
 
   
@@ -40,10 +49,13 @@ class ViewAssigns extends Component {
 
 
   render() {
-    let {asignaciones,medicines} = this.state;
+    let {asignaciones,medicines,medicos} = this.state;
+    console.log(medicos);
+    
     let printAssigns = asignaciones.length > 0 && asignaciones.map( assign => 
       <ShowAssign key={assign.id}
       medicines={medicines}
+      medicos={medicos}
       onCRUD={this.handleChanges} 
       accessMethod={this.props.access || 'adminAss'} 
       assign={assign}/>)

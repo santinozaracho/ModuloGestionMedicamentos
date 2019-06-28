@@ -42,6 +42,8 @@ app.get('/asignaciones/:assignId', impCtrls.getAsignacion);
 app.post('/asignaciones', impCtrls.setAsignation);
 app.delete('/asignaciones/:assignId', impCtrls.delAsignaciones);
 
+app.get('/medicos',impCtrls.getMedicos);
+
 
 app.listen(app.get('port'), () => {console.log("La API se Incio...", app.get('port'))});
 
